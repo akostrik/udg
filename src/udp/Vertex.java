@@ -108,7 +108,7 @@ public class Vertex extends Point {
 	return this.x==other.x&&this.y==other.y&&this.color==other.color&&this.active==other.active&&this.dominator==other.dominator;
   }
 
-  public static ArrayList<Vertex> transformToVertex(ArrayList<Point> points) {
+  public static ArrayList<Vertex> convertToVertex(ArrayList<Point> points) {
 	ArrayList<Vertex> toReturn = new ArrayList<Vertex>();
 	for(Point p : points) 
 	  toReturn.add(new Vertex(p.x,p.y));
