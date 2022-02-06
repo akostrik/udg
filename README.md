@@ -15,7 +15,7 @@
   - Algo of the article "On greedy construction of CDS in wireless networks" by Yingshu, Thai, Wang, Yi, Wan, Du (2005)
 
 
-*Other realisations :* 
+*Other realisations:* 
 - https://github.com/LexTek/Convex-Minimum-Dominating-Set (Sorbonne)
 - https://github.com/arjunvijayvargiya/ConnectedDominatingSet (i=2 only ?)
 - https://github.com/ThamazghaSMAIL/DominatingSet/tree/master/src/algorithms (Sorbonne)
