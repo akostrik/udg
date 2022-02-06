@@ -1,4 +1,4 @@
-package udp; 
+package udg; 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,13 +14,13 @@ import functionalInterfaces.ShouldContinueGreedy;
 import functionalInterfaces.ToRemoveBeforeContinueGreedy;
 import java.awt.Point;
 
-public class UDP {
+public class UDG {
   public ArrayList<Vertex>             vertex                       = null; // initialisation in the constructor
   public static int                    edgeThreshold;                       // the only init., here ? in the calling class ?
   public static int                    K;                                   // for algo kmeans
   public Vertex                        center                       = null; // for algo kmeans, center = mean point
-  public static ArrayList<UDP>         cycles;                              
-  public Map<Vertex,UDP>               mapBlackBlueComponents       = null;
+  public static ArrayList<UDG>         cycles;                              
+  public Map<Vertex,UDG>               mapBlackBlueComponents       = null;
   public AlgoImprove1stSolution        tryToRemovePoints            = null; // initialisation in the constructor
   public AlgoImprove1stSolution        tryToReplace2by1             = null; // initialisation in the constructor
   public AlgoImprove1stSolution        tryToReplace3by2             = null; // initialisation in the constructor
@@ -33,7 +33,7 @@ public class UDP {
 
   // // // // // // // // // // // // // // CONTRUCTORS
   
-  public UDP(ArrayList<Vertex> vertex) {
+  public UDG(ArrayList<Vertex> vertex) {
     this.vertex            = vertex;   
     this.tryToRemovePoints = (firstSolution) -> { return this.tryToRemovePoints(firstSolution); };
     this.tryToReplace2by1  = (firstSolution) -> { return this.tryToReplace2by1 (firstSolution); };
@@ -41,35 +41,35 @@ public class UDP {
     this.greedyAlgo        = (             ) -> { return this.greedyAlgo       (             ); };
   }
   
-  public UDP(HashSet<Vertex> vertex) {
+  public UDG(HashSet<Vertex> vertex) {
 	this(new ArrayList<Vertex>(vertex));  
   }
   
-  public UDP(ArrayList<Vertex> vertex, Vertex p) {
+  public UDG(ArrayList<Vertex> vertex, Vertex p) {
     this(vertex);
     this.add(p);
   }
   
-  public UDP(Vertex p1, Vertex p2) {
+  public UDG(Vertex p1, Vertex p2) {
     this(new ArrayList<Vertex>());
 	this.add(p1); 
 	this.add(p2);
   }
 
-  public UDP(Vertex p) {
+  public UDG(Vertex p) {
     this(new ArrayList<Vertex>());
 	this.add(p);
   }
 
-  public UDP() {
+  public UDG() {
   	this(new ArrayList<Vertex>());
   }
 	  
   // // // // // // // // // // // // // // ALGOS
 
-  public static UDP repeatNtimes(int N, UDP firstSolution, AlgoImprove1stSolution func) { 
-    UDP currentSolution  = firstSolution.clone(); /// serialization insteaf of clone ?	
-    UDP solutionCandidat = null; 
+  public static UDG repeatNtimes(int N, UDG firstSolution, AlgoImprove1stSolution func) { 
+    UDG currentSolution  = firstSolution.clone(); /// serialization insteaf of clone ?	
+    UDG solutionCandidat = null; 
     for (int i=0;i<N;i++) { 
    	  solutionCandidat = func.method(currentSolution); // greedyAlgo();
       if (solutionCandidat.score()<currentSolution.score()) 
@@ -79,11 +79,11 @@ public class UDP {
     return currentSolution;
   }
 
-  public static UDP repeatWhileCanDoBetter(UDP firstSolution, AlgoImprove1stSolution func) { // = Local Search
+  public static UDG repeatWhileCanDoBetter(UDG firstSolution, AlgoImprove1stSolution func) { // = Local Search
 	// firstSolution = a valid solution
 	// func = tryToRemovePoints, tryToreplace2by1, tryToReplace3by2, ...
-    UDP currentSolution  = null;	
-    UDP solutionCandidat = firstSolution.clone(); 
+    UDG currentSolution  = null;	
+    UDG solutionCandidat = firstSolution.clone(); 
     do {
   	  currentSolution = solutionCandidat;
   	  solutionCandidat = func.method(currentSolution); 
@@ -92,14 +92,14 @@ public class UDP {
     return currentSolution; 
   }
 
-  public UDP tryToRemovePoints(UDP firstSolution) { 
-    UDP solutionCandidat = firstSolution.shuffledClone(); 
+  public UDG tryToRemovePoints(UDG firstSolution) { 
+    UDG solutionCandidat = firstSolution.shuffledClone(); 
     for (int i=0;i<solutionCandidat.size();i++) 
       tryToRemove_i(i,solutionCandidat);     
     return solutionCandidat;
   }
   
-  private void tryToRemove_i(int i, UDP solutionCandidat) {
+  private void tryToRemove_i(int i, UDG solutionCandidat) {
     Vertex removed = solutionCandidat.get(i);
     solutionCandidat.remove(removed);
     if (this.isSolution.method(solutionCandidat)) 
@@ -107,11 +107,11 @@ public class UDP {
     solutionCandidat.add(i,removed);
    }
 
-  public UDP tryToReplace2by1(UDP firstSolution) { // two points by one
-	UDP solutionCandidat = firstSolution.shuffledClone();
+  public UDG tryToReplace2by1(UDG firstSolution) { // two points by one
+	UDG solutionCandidat = firstSolution.shuffledClone();
     //solutionCandidat = tryToRemovePoints(solutionCandidat); // do not do this
     //if(solutionCandidat.size()==this.size()) return firstSolution;
-    UDP rest = partExternalTo(solutionCandidat).clone(); 
+    UDG rest = partExternalTo(solutionCandidat).clone(); 
     for (int i=0;i<solutionCandidat.size();i++) 
       for (int j=i+1;j<solutionCandidat.size();j++) 
     	if(this.willTryToReplace2Points.method(solutionCandidat.get(i),solutionCandidat.get(j)))
@@ -119,11 +119,11 @@ public class UDP {
     return solutionCandidat;
   }
 
-  public UDP tryToReplace3by2(UDP firstSolution) { // three points by two
-	UDP solutionCandidat = firstSolution.shuffledClone();
+  public UDG tryToReplace3by2(UDG firstSolution) { // three points by two
+	UDG solutionCandidat = firstSolution.shuffledClone();
 	solutionCandidat = tryToRemovePoints(solutionCandidat); 
     if(solutionCandidat.size()==this.size()) return firstSolution;
-    UDP rest = partExternalTo(solutionCandidat).clone();
+    UDG rest = partExternalTo(solutionCandidat).clone();
     for (int i=0;i<solutionCandidat.size();i++) 
       for (int j=i+1;j<solutionCandidat.size();j++) 
         for (int k=j+1;k<solutionCandidat.size();k++) 
@@ -132,7 +132,7 @@ public class UDP {
     return solutionCandidat;
   }
 
-  public void tryToReplace_i_j_by1(int i, int j, UDP solution, UDP rest) { // j>i
+  public void tryToReplace_i_j_by1(int i, int j, UDG solution, UDG rest) { // j>i
     System.out.println("try to replace "+i+" "+j+" "+solution.toString());
     Vertex removedJ = solution.remove(j); // j>i
     Vertex removedI = solution.remove(i);
@@ -148,7 +148,7 @@ public class UDP {
     solution.add(j,removedJ);
   }
 
-  public void tryToReplace_i_j_k_by2(int i, int j, int k, UDP solution, UDP rest) { // i<j<k
+  public void tryToReplace_i_j_k_by2(int i, int j, int k, UDG solution, UDG rest) { // i<j<k
     System.out.println("try to replace "+i+" "+j+" "+k+" "+solution.toString());
     Vertex removedK = solution.remove(k);
     Vertex removedJ = solution.remove(j);
@@ -171,9 +171,9 @@ public class UDP {
     solution.add(k,removedK);
   }
 
-  public UDP greedyAlgo() { // FVS, MDS 
-    UDP rest            = this.shuffledClone(); 
-    UDP currentSolution = new UDP(); // future MDS or FVS
+  public UDG greedyAlgo() { // FVS, MDS 
+    UDG rest            = this.shuffledClone(); 
+    UDG currentSolution = new UDG(); // future MDS or FVS
     while(shouldContinueGreedy.method(currentSolution,rest)) { // FVS while(!isSolution(currentSolution)), MDS while(rest.isNotEmpty()) 
       Vertex theMostConnectedPoint=rest.theMostConnectedPoint();
       currentSolution.add(theMostConnectedPoint.clone());
@@ -186,8 +186,8 @@ public class UDP {
   // // // // // // // // // // // // CYCLES 
 
   public boolean cyclesExist() {
-	UDP rest    = this.clone(); 
-	UDP visited = new UDP(); 
+	UDG rest    = this.clone(); 
+	UDG visited = new UDG(); 
 	while(!rest.isEmpty()) {
       Vertex newlyVisitedP = anyPointFromNeighborhoodOfVisited(visited,rest); 
       rest.remove(newlyVisitedP);
@@ -200,15 +200,15 @@ public class UDP {
     return false;
   }
   
-  public ArrayList<UDP> elementaryCycles() { // DNS
-	UDP.cycles = new ArrayList<UDP>();
+  public ArrayList<UDG> elementaryCycles() { // DNS
+	UDG.cycles = new ArrayList<UDG>();
     markAllVertexWhite(); 
     for (Vertex p : vertex) 
-   	  calculateElementaryCyclesFromPath(new UDP(p));
-    return UDP.cycles;
+   	  calculateElementaryCyclesFromPath(new UDG(p));
+    return UDG.cycles;
   }
 
-  public void calculateElementaryCyclesFromPath(UDP path) { 
+  public void calculateElementaryCyclesFromPath(UDG path) { 
     Vertex lastPointPath = path.get(path.size()-1);
     lastPointPath.markDominatee(); // grey = points of the path = under verification
 	for(Vertex newPoint : this.neighborhoodWithoutCentralPoint(lastPointPath).vertex) {
@@ -217,10 +217,10 @@ public class UDP {
     	calculateElementaryCyclesFromPath(path);
 	  }
 	  else if(newPoint.isDominatee() && !newPoint.equals(path.get(path.size()-2))) {
-	    UDP cycle = path.sublistFromNewPointToNewPoint(newPoint);
+	    UDG cycle = path.sublistFromNewPointToNewPoint(newPoint);
 	    cycle.rotateAndMayBeInvertDirectionCycle();
 	    if(isNewCycle(cycle)) 
-	      UDP.cycles.add(cycle);
+	      UDG.cycles.add(cycle);
 	  }
     }  
 	lastPointPath.markBlack();
@@ -228,42 +228,42 @@ public class UDP {
 
   // // // // // // // // // // // // // UTILS - CLONE
 
-  public UDP clone() {
+  public UDG clone() {
     // to serialize a lambda in Java 8 : possible, strongly discouraged, lambdas may not deserialize properly on another JRE ?
-	return new UDP(clone(this.vertex)); 
+	return new UDG(clone(this.vertex)); 
   }
 
-  public UDP clonePartExternalTo2(UDP g) {
-    UDP rest = this.clone();
+  public UDG clonePartExternalTo2(UDG g) {
+    UDG rest = this.clone();
     rest.removeAll(g);
     return rest; 
   }
 
-  public UDP partExternalTo(UDP g) { // not clone
+  public UDG partExternalTo(UDG g) { // not clone
     ArrayList<Vertex> extrenalPart = new ArrayList<Vertex>(); 
     for(Vertex p : vertex)
       if(!g.contains(p))
     	extrenalPart.add(p);
-    return new UDP(extrenalPart);
+    return new UDG(extrenalPart);
   }
 
-  public UDP cloneAndAddVertex(Vertex p) {
-	UDP clone = this.clone();
+  public UDG cloneAndAddVertex(Vertex p) {
+	UDG clone = this.clone();
 	clone.add(p);
     return clone;
   }
   
-  public UDP shuffledClone() { 
-	UDP clone = this.clone();
+  public UDG shuffledClone() { 
+	UDG clone = this.clone();
     Collections.shuffle(clone.vertex,new Random(System.nanoTime())); 
     return clone;
   }
 
-  public UDP cloneWithoutDuplicata() {
-	return new UDP(cloneWithoutDuplicata(this.vertex));
+  public UDG cloneWithoutDuplicata() {
+	return new UDG(cloneWithoutDuplicata(this.vertex));
   }	  
 
-  public UDP shuffledCloneWithoutDuplicata() {
+  public UDG shuffledCloneWithoutDuplicata() {
     return this.cloneWithoutDuplicata().shuffledClone();
   }
 
@@ -289,47 +289,47 @@ public class UDP {
 
   // // // // // // // // // // // // // UTILS - SUB-UDP
   
-  public UDP neighborhoodWithCentralPoint(Vertex p) { // not clone 
-	UDP neighborhood = new UDP();
+  public UDG neighborhoodWithCentralPoint(Vertex p) { // not clone 
+	UDG neighborhood = new UDG();
 	for (Vertex candidat: this.vertex) 
-	  if (candidat.distance(p)<UDP.edgeThreshold) 
+	  if (candidat.distance(p)<UDG.edgeThreshold) 
         neighborhood.add(candidat);
 	return neighborhood; 
   }
 
-  public UDP neighborhoodWithoutCentralPoint(Vertex p) { // not clone
-	UDP neighborhood = neighborhoodWithCentralPoint(p);
+  public UDG neighborhoodWithoutCentralPoint(Vertex p) { // not clone
+	UDG neighborhood = neighborhoodWithCentralPoint(p);
 	neighborhood.remove(p);
 	return neighborhood;
   }
 
-  public UDP notExploredNeighborhoodWithoutCentralPoint(Vertex p) { // not clone 
-	UDP neighborhood = new UDP();
+  public UDG notExploredNeighborhoodWithoutCentralPoint(Vertex p) { // not clone 
+	UDG neighborhood = new UDG();
 	for (Vertex candidat: this.vertex) 
-	  if (candidat.distance(p)<UDP.edgeThreshold && candidat.isNotExplored()) 
+	  if (candidat.distance(p)<UDG.edgeThreshold && candidat.isNotExplored()) 
 	    neighborhood.add(candidat);
 	neighborhood.remove(p);
 	return neighborhood; 
   }
 
-  public UDP notExploredActiveNeighborhoodWithCentralPoint(Vertex p) { // not clone 
-	UDP neighborhood = new UDP();
+  public UDG notExploredActiveNeighborhoodWithCentralPoint(Vertex p) { // not clone 
+	UDG neighborhood = new UDG();
 	for (Vertex candidat: this.vertex)
-	  if (candidat.distance(p)<UDP.edgeThreshold && candidat.isNotExplored() && candidat.active==true) 
+	  if (candidat.distance(p)<UDG.edgeThreshold && candidat.isNotExplored() && candidat.active==true) 
 	    neighborhood.add(candidat);
 	return neighborhood; 
   }
 
-  public UDP blackNeighborhoodWithoutCentralPoint(Vertex p) { // not clone 
-    UDP neighborhood = new UDP();
+  public UDG blackNeighborhoodWithoutCentralPoint(Vertex p) { // not clone 
+    UDG neighborhood = new UDG();
     // System.out.println("  @ find black neighborhood of "+p.toString()+" in "+this.vertex.toString());
     for (Vertex candidat: this.vertex) 
-	  if (candidat.distance(p)<UDP.edgeThreshold && candidat.isBlack()) 
+	  if (candidat.distance(p)<UDG.edgeThreshold && candidat.isBlack()) 
 	    neighborhood.add(candidat);
 	neighborhood.remove(p);
 	return neighborhood; 
   }
-  public UDP neighborhoodWithInitialPoints(UDP initialPoints) { // not clone 
+  public UDG neighborhoodWithInitialPoints(UDG initialPoints) { // not clone 
 	HashSet<Vertex> pointsToAdd = new HashSet<Vertex>(); 
 	for(Vertex p : initialPoints.vertex)
 	  pointsToAdd.addAll(this.neighborhoodWithCentralPoint(p).vertex);
@@ -337,8 +337,8 @@ public class UDP {
 	return initialPoints; 
   }
 
-  public UDP blackNeighborhoodWithoutInitialPoints(UDP initialPoints) { // not clone 
-    return new UDP(blackNeighborhoodWithoutInitialPoints(new HashSet<Vertex>(initialPoints.vertex)));
+  public UDG blackNeighborhoodWithoutInitialPoints(UDG initialPoints) { // not clone 
+    return new UDG(blackNeighborhoodWithoutInitialPoints(new HashSet<Vertex>(initialPoints.vertex)));
   }
 	  
   public HashSet<Vertex> blackNeighborhoodWithoutInitialPoints(HashSet<Vertex> initialPoints) { // not clone 
@@ -350,62 +350,62 @@ public class UDP {
 	return blackNeighborhood; 
   }
 
-  public UDP neighborhoodWithoutInitialPoints(UDP initialPoints) { // not clone 
-	UDP toReturn = neighborhoodWithInitialPoints(initialPoints); 
+  public UDG neighborhoodWithoutInitialPoints(UDG initialPoints) { // not clone 
+	UDG toReturn = neighborhoodWithInitialPoints(initialPoints); 
 	toReturn.removeAll(initialPoints);
 	return toReturn;
   }
 
-  public UDP notExploredVertex() {
+  public UDG notExploredVertex() {
 	return whiteVertex();
   }
   
-  public UDP whiteVertex() {
-	UDP white = new UDP();
+  public UDG whiteVertex() {
+	UDG white = new UDG();
 	for(Vertex p : vertex)
 	  if(p.isWhite())
 		white.add(p); 
 	return white;
   }
 
-  public UDP greyVertex() {
-	UDP grey = new UDP();
+  public UDG greyVertex() {
+	UDG grey = new UDG();
 	for(Vertex p : vertex)
 	  if(p.isGrey())
 		grey.add(p); 
 	return grey;
   }
 
-  public UDP dominatorsVertex() {
+  public UDG dominatorsVertex() {
 	return blackVertex();
   }
   
-  public UDP blackVertex() {
-	UDP black = new UDP();
+  public UDG blackVertex() {
+	UDG black = new UDG();
 	for(Vertex p : vertex)
 	  if(p.isBlack())
 		black.add(p); 
 	return black;
   }
 
-  public UDP blackAndBlueVertex() {
-	UDP blackAndBlueVertex = new UDP();
+  public UDG blackAndBlueVertex() {
+	UDG blackAndBlueVertex = new UDG();
 	for(Vertex p : vertex)
 	  if(p.isBlack() || p.isBlue())
 		blackAndBlueVertex.add(p); 
 	return blackAndBlueVertex;
   }
 
-  public UDP notExploredActiveVertex() {
-    UDP whiteActiveVertex = new UDP();
+  public UDG notExploredActiveVertex() {
+    UDG whiteActiveVertex = new UDG();
     for(Vertex p : this.vertex)
       if(p.isNotExploredActive())
     	whiteActiveVertex.add(p);
     return whiteActiveVertex;
   }
 	  
-  private UDP sublistFromNewPointToNewPoint(Vertex newPoint) {
-	UDP cycle = new UDP(); 
+  private UDG sublistFromNewPointToNewPoint(Vertex newPoint) {
+	UDG cycle = new UDG(); 
     for(int i=this.vertex.size()-1; i>=0; i--) { 
       cycle.add(vertex.get(i));
       if(vertex.get(i).equals(newPoint)) 
@@ -414,19 +414,19 @@ public class UDP {
     return cycle;
   }
 
-  public Map<Vertex,UDP> blackComponents() { // not clone
-	Map<Vertex,UDP> mapBlackComponents = new HashMap<Vertex, UDP>(); 
-    UDP rest = this.blackVertex().clone();
+  public Map<Vertex,UDG> blackComponents() { // not clone
+	Map<Vertex,UDG> mapBlackComponents = new HashMap<Vertex, UDG>(); 
+    UDG rest = this.blackVertex().clone();
 	while(rest.size()>0) {
 	  Vertex blackPoint = rest.get(0);
-	  UDP blackComponent = blackComponent(blackPoint);
+	  UDG blackComponent = blackComponent(blackPoint);
 	  mapBlackComponents.put(blackPoint,blackComponent);
 	  rest.removeAll(blackComponent);
 	}
     return mapBlackComponents;
   }
   
-  public UDP blackComponent(Vertex blackPoint) { // not clone
+  public UDG blackComponent(Vertex blackPoint) { // not clone
 	HashSet<Vertex> blackComponent = new HashSet<Vertex>();
 	blackComponent.add(blackPoint);
 	while(true) {
@@ -434,22 +434,22 @@ public class UDP {
 	  blackComponent.addAll(toAdd);
 	  if(toAdd.size()==0) break; /// ?
 	} 
-	return new UDP(blackComponent);
+	return new UDG(blackComponent);
   }
 
-  public UDP connectedComponent(Vertex p0) { // not clone
+  public UDG connectedComponent(Vertex p0) { // not clone
 	HashSet<Vertex> component = new HashSet<Vertex>();
 	component.add(p0);
 	while(true) {
 	  HashSet<Vertex> toAdd = new HashSet<Vertex>();
-      for(Vertex candidat : this.partExternalTo(new UDP(component)).vertex)
+      for(Vertex candidat : this.partExternalTo(new UDG(component)).vertex)
 	    for(Vertex pointComponent : component)
 		  if(isEdge(candidat,pointComponent))
 		    toAdd.add(candidat);
 	  component.addAll(toAdd);
 	  if(toAdd.size()==0) break; /// ?
 	} 
-	UDP componentAsUDP = new UDP(component);
+	UDG componentAsUDP = new UDG(component);
 	return componentAsUDP;
   }
 
@@ -488,7 +488,7 @@ public class UDP {
     return false;
   }
   
-  public boolean canAddToMisKeepingPropriety(Vertex candidat, UDP misWithPropriety) { 
+  public boolean canAddToMisKeepingPropriety(Vertex candidat, UDG misWithPropriety) { 
 	//  propriety of lemma 2 "On greedy construction of CDS in wireless networks" Yingshu Thai Wang Yi Wan Du 
     if(misWithPropriety.contains(candidat)) // ?
       return true; 
@@ -501,7 +501,7 @@ public class UDP {
 	return false;
   }
 
-  public boolean hasAsMisWithPropriety(UDP misToVerify) { 
+  public boolean hasAsMisWithPropriety(UDG misToVerify) { 
     // distance 2 hops, lemma 2 "On greedy construction of CDS in wireless networks" Yingshu Thai Wang Yi Wan Du 
     for(int i = 0; i<misToVerify.size(); i++) {
       Vertex p1 = misToVerify.get(i);
@@ -520,9 +520,9 @@ public class UDP {
 	return true;
   }
 
-  public boolean hasAsMis(UDP misToVerify) { // with or without propriety "2 hops distance"
+  public boolean hasAsMis(UDG misToVerify) { // with or without propriety "2 hops distance"
     for(Vertex p : this.partExternalTo(misToVerify).clone().vertex) 
-      if(new UDP(misToVerify.clone().vertex,p).isIndependentSet()) // optimisation possible - verify only p ?
+      if(new UDG(misToVerify.clone().vertex,p).isIndependentSet()) // optimisation possible - verify only p ?
         return false;
 	return true;
   }
@@ -539,11 +539,11 @@ public class UDP {
  	return true;
   }
 
-  public boolean hasAsCDS(UDP cdsToVerify) { 
+  public boolean hasAsCDS(UDG cdsToVerify) { 
     return this.hasAsDS(cdsToVerify) && cdsToVerify.isConnected();
   }
   
-  public boolean hasAsDS(UDP dsToVerify) { 
+  public boolean hasAsDS(UDG dsToVerify) { 
 	if(dsToVerify.isEmpty()) return false;
     for(Vertex p : vertex) {
       boolean pointIsVisited=false;
@@ -556,7 +556,7 @@ public class UDP {
    return true;
   }
 
-  public boolean hasAsFVS(UDP fvsToVerify) {
+  public boolean hasAsFVS(UDG fvsToVerify) {
 	return !this.partExternalTo(fvsToVerify).clone().cyclesExist();
   }
   
@@ -592,7 +592,7 @@ public class UDP {
     return vertexHighest_dAsterix_id;
   }
   
-  private static ArrayList<Vertex> sublistStartingAfterPoint(Vertex p, UDP g) {
+  private static ArrayList<Vertex> sublistStartingAfterPoint(Vertex p, UDG g) {
     return new ArrayList<Vertex>(g.vertex.subList(g.vertex.indexOf(p)+1,g.vertex.size()));
   }
 	  
@@ -613,7 +613,7 @@ public class UDP {
   }
 
   private void invertDirectionCycle() { 
-    UDP invertedPoints = new UDP();
+    UDG invertedPoints = new UDG();
     invertedPoints.add(this.vertex.get(0));
 	for (int i=this.vertex.size()-1; i>=1; i--)
 	  invertedPoints.add(vertex.get(i));
@@ -628,13 +628,13 @@ public class UDP {
 	return leftTopPoint;
   }
 
-  public static boolean isNewCycle(UDP cycleToVerify) {
-	for(UDP cycle : UDP.cycles)
+  public static boolean isNewCycle(UDG cycleToVerify) {
+	for(UDG cycle : UDG.cycles)
 	  if(cycle.equalsNormalizedCycle(cycleToVerify)) return false;
 	return true;
   }
   
-  public boolean equalsNormalizedCycle(UDP cycle2) {
+  public boolean equalsNormalizedCycle(UDG cycle2) {
 	if(this.size()!=cycle2.size()) 
 	  return false;
     for(int i=0; i<this.size(); i++)
@@ -656,7 +656,7 @@ public class UDP {
     return true;
   }
 
-  private Vertex anyPointFromNeighborhoodOfVisited(UDP visitedConnComp, UDP rest) {
+  private Vertex anyPointFromNeighborhoodOfVisited(UDG visitedConnComp, UDG rest) {
 	if(rest.size()==0) 
 	  return null;
 	if(rest.neighborhoodWithoutInitialPoints(visitedConnComp).size()>0) 
@@ -696,7 +696,7 @@ public class UDP {
   	  p.color = Color.BLACK;
   }
 
-  public void markVertexBlack(UDP subG) {
+  public void markVertexBlack(UDG subG) {
     for(Vertex p : this.vertex)
       for(Vertex q : subG.vertex) 
   	    if(p.equals(q))
@@ -724,7 +724,7 @@ public class UDP {
 	vertex.add(n,p);
   }
   
-  public void add(UDP g) {
+  public void add(UDG g) {
 	vertex.addAll(g.vertex);
   }
   
@@ -745,7 +745,7 @@ public class UDP {
 	return vertex.removeAll(toRemove);
   }
 
-  public boolean removeAll(UDP g) {
+  public boolean removeAll(UDG g) {
 	ArrayList<Vertex> toRemove = g.clone().vertex;
 	return vertex.removeAll(toRemove);
   }
@@ -843,8 +843,8 @@ public class UDP {
   }
   
   public static String cyclesToString() {
-    String toReturn=UDP.cycles.size()+" cycles:\n";
-	  for(UDP cycle : UDP.cycles) 
+    String toReturn=UDG.cycles.size()+" cycles:\n";
+	  for(UDG cycle : UDG.cycles) 
    	    toReturn += cycle.toString()+"\n";
     return toReturn;
   }
@@ -861,9 +861,9 @@ public class UDP {
 	return this.size();
   }
   
-  public UDP allCycles() { // for debugging 
-    UDP allCycles = this.clone();
-    for(UDP cycle : cycles) 
+  public UDG allCycles() { // for debugging 
+    UDG allCycles = this.clone();
+    for(UDG cycle : cycles) 
    	  allCycles.removeAll(cycle);
     return allCycles;
   }

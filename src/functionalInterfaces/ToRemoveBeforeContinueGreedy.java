@@ -1,10 +1,10 @@
 package functionalInterfaces;
 import java.io.Serializable;
 
-import udp.UDP;
-import udp.Vertex;
+import udg.UDG;
+import udg.Vertex;
 @FunctionalInterface
 
 public interface ToRemoveBeforeContinueGreedy extends Serializable {
-  UDP method(Vertex p); 
+  UDG method(Vertex p); 
 }

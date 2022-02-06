@@ -4,28 +4,29 @@
 package algorithms;
 import java.util.ArrayList;
 import java.util.HashSet;
-import udp.UDP;
-import udp.Vertex;
 
-public class UDPwithCDS extends UDP { // connected dominating set
+import udg.UDG;
+import udg.Vertex;
+
+public class UDGwithCDS extends UDG { // connected dominating set
 	
-  public UDPwithCDS(ArrayList<Vertex> vertex) {
+  public UDGwithCDS(ArrayList<Vertex> vertex) {
     super(vertex);
     this.isSolution                  = (solutionCandidat)                -> { return this.hasAsCDS(solutionCandidat); };
     this.willTryToReplace2Points   = (Vertex p1, Vertex p2)            -> { return true; }; 
     this.willTryToReplace3Points = (Vertex p1, Vertex p2, Vertex p3) -> { return true; };
   }
 
-  public UDP cds() { 
-	UDP cds=cdsAlgoArticle(); 
+  public UDG cds() { 
+	UDG cds=cdsAlgoArticle(); 
 	cds = this.tryToRemovePoints(cds); 
 	// cds = this.tryToReplace2by1(cds); // too long
 	System.out.println(" cds = "+cds.toStringWithColorsDegrees());
     return cds;	
   }
   
-  private UDP cdsAlgoArticle() { // "On greedy construction of CDS in wireless networks" Yingshu Thai Wang Yi Wan Du 
-	UDP mis = new UDPwithMIS(vertex).misWithProperty(); 
+  private UDG cdsAlgoArticle() { // "On greedy construction of CDS in wireless networks" Yingshu Thai Wang Yi Wan Du 
+	UDG mis = new UDGwithMIS(vertex).misWithProperty(); 
     System.out.println("mis = "+mis.toStringWithColorsDegrees());
 	this.markVertexBlack(mis);
   	this.partExternalTo(mis).markAllVertexGrey();
@@ -35,7 +36,7 @@ public class UDPwithCDS extends UDP { // connected dominating set
     for(int i=5; i>=2; i--) /// optimisation - lorsque i=5 trouvé pour i=2
       for(boolean changements=true; changements==true; changements=false)
         for(Vertex connector : this.greyVertex().vertex) {
-          ArrayList<UDP> potentiallyConnectedComponents = potentiallyConnectedBlackBlueComponents(connector);
+          ArrayList<UDG> potentiallyConnectedComponents = potentiallyConnectedBlackBlueComponents(connector);
        	  System.out.println("i="+i+", "+connector.toString()+ " can connect components : "+potentiallyConnectedComponents.toString());
     	  if(potentiallyConnectedComponents!=null && potentiallyConnectedComponents.size()==i) {
     	    connectBlackBlueComponents(potentiallyConnectedComponents,connector);
@@ -46,21 +47,21 @@ public class UDPwithCDS extends UDP { // connected dominating set
     return this.blackAndBlueVertex();
   }
 
-  private ArrayList<UDP> potentiallyConnectedBlackBlueComponents(Vertex connector) { 
-	HashSet<UDP> potentiallyConnectedComponents = new HashSet<UDP>(); 
+  private ArrayList<UDG> potentiallyConnectedBlackBlueComponents(Vertex connector) { 
+	HashSet<UDG> potentiallyConnectedComponents = new HashSet<UDG>(); 
     for (Vertex blackNeighborOfConnector : this.blackNeighborhoodWithoutCentralPoint(connector).vertex) 
-      for (UDP component : this.mapBlackBlueComponents.values()) 
+      for (UDG component : this.mapBlackBlueComponents.values()) 
     	if (component.contains(blackNeighborOfConnector)) 
     	  potentiallyConnectedComponents.add(component); 
- 	return new ArrayList<UDP>(potentiallyConnectedComponents);
+ 	return new ArrayList<UDG>(potentiallyConnectedComponents);
   }
  
-  private void connectBlackBlueComponents(ArrayList<UDP> components, Vertex connector) { /// optimisation not keep all UDP
-    UDP unitedComponent = components.get(0);
+  private void connectBlackBlueComponents(ArrayList<UDG> components, Vertex connector) { /// optimisation not keep all UDP
+    UDG unitedComponent = components.get(0);
     mapBlackBlueComponents.put(connector,unitedComponent);
     unitedComponent.add(connector);
   	for(int i=1; i<components.size(); i++) {
-	  UDP component = components.get(i);
+	  UDG component = components.get(i);
 	  for(Vertex p : component.vertex) {
 		mapBlackBlueComponents.remove(p,component);
 	    mapBlackBlueComponents.put(p,unitedComponent);

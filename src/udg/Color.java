@@ -1,4 +1,4 @@
-package udp;
+package udg;
 
 import java.io.Serializable;
 

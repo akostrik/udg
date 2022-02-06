@@ -1,16 +1,16 @@
 package algorithms;
 import java.util.ArrayList;
 
-import udp.UDP;
-import udp.Vertex;
+import udg.UDG;
+import udg.Vertex;
 
-public class UDPwithDS extends UDP { // dominating set
+public class UDGwithDS extends UDG { // dominating set
 
-  public UDPwithDS(ArrayList<Vertex> vertex) {
+  public UDGwithDS(ArrayList<Vertex> vertex) {
     super(vertex);
     this.isSolution                   = (solutionCandidat)     -> { return hasAsDS(solutionCandidat); }; 
     this.shouldContinueGreedy         = (currentSolution,rest) -> { return rest.isNotEmpty();}; // ok
-    this.toRemoveBeforeContinueGreedy = (pointsToRemove)       -> { return new UDP(neighborhoodWithCentralPoint(pointsToRemove).vertex);}; 
+    this.toRemoveBeforeContinueGreedy = (pointsToRemove)       -> { return new UDG(neighborhoodWithCentralPoint(pointsToRemove).vertex);}; 
     this.willTryToReplace2Points      = (Vertex p1, Vertex p2) -> { return p1.distance(p2)<4*edgeThreshold; }; // ?
 
     this.willTryToReplace3Points      = (Vertex p1, Vertex p2, Vertex p3)-> { // ?
@@ -20,8 +20,8 @@ public class UDPwithDS extends UDP { // dominating set
     }; 
   }
 
-  public UDP ds() {
-    UDP ds = greedyAlgo(); // 94
+  public UDG ds() {
+    UDG ds = greedyAlgo(); // 94
 
     // ds = this.tryToReplace3by2(ds); // too long
 

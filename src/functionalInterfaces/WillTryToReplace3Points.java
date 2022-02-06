@@ -2,7 +2,7 @@ package functionalInterfaces;
 import java.io.Serializable;
 import java.lang.FunctionalInterface;
 
-import udp.Vertex;
+import udg.Vertex;
 @FunctionalInterface
 
 public interface WillTryToReplace3Points extends Serializable {

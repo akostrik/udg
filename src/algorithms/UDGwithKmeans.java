@@ -3,16 +3,16 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
-import udp.UDP;
-import udp.Vertex;
+import udg.UDG;
+import udg.Vertex;
 
-public class UDPwithKmeans extends UDP {
+public class UDGwithKmeans extends UDG {
   ArrayList<Vertex> centers = null;
-  ArrayList<UDP>    kmeans  = null;
+  ArrayList<UDG>    kmeans  = null;
 	
-  public UDPwithKmeans(ArrayList<Vertex> vertex) {
+  public UDGwithKmeans(ArrayList<Vertex> vertex) {
 	this.vertex = vertex;
-	this.kmeans = new ArrayList<UDP>();
+	this.kmeans = new ArrayList<UDG>();
 	//initializeCentres();
 	//putTheRestOfPointsTo1stKmean();
   }

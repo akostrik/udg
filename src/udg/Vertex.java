@@ -1,10 +1,10 @@
-package udp;
+package udg;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 
-import algorithms.UDPwithMIS;
+import algorithms.UDGwithMIS;
 
 public class Vertex extends Point {
   public Color   color;
@@ -28,11 +28,11 @@ public class Vertex extends Point {
     this.dominator                               = dominator;
   }
   
-  public int countEffectiveDegree(UDP g) {
+  public int countEffectiveDegree(UDG g) {
 	return g.notExploredNeighborhoodWithoutCentralPoint(this).size();
   }
 
-  public int getDegree(UDP g) {
+  public int getDegree(UDG g) {
 	return g.neighborhoodWithoutCentralPoint(this).size();
   }
 

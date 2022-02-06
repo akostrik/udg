@@ -2,9 +2,9 @@ package functionalInterfaces;
 import java.io.Serializable;
 import java.lang.FunctionalInterface;
 
-import udp.UDP;
+import udg.UDG;
 @FunctionalInterface
 
 public interface ToReturnGreedy extends Serializable {
-  UDP method(UDP initiallyAllPoints,UDP initiallyEmpty); 
+  UDG method(UDG initiallyAllPoints,UDG initiallyEmpty); 
 }

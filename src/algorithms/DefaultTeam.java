@@ -1,15 +1,16 @@
 package algorithms;
 import java.awt.Point;
 import java.util.ArrayList;
-import udp.UDP;
-import udp.Vertex;
+
+import udg.UDG;
+import udg.Vertex;
 
 public class DefaultTeam {
   public ArrayList<Point> calculConnectedDominatingSet(ArrayList<Point> points, int edgeThreshold) {
-	UDP.edgeThreshold = edgeThreshold;
-    UDP.K = 5; // for algo kmeans
+	UDG.edgeThreshold = edgeThreshold;
+    UDG.K = 5; // for algo kmeans
 	
-	UDP solution = new UDPwithKmeans(Vertex.convertToVertex(points));
+	UDG solution = new UDGwithKmeans(Vertex.convertToVertex(points));
 
 	// UDP solution = new UDPWithFVS(Vertex.convertToVertex(points)).fvs();
 	// UDP solution = new UDPwithDS(Vertex.convertToVertex(points)).ds();

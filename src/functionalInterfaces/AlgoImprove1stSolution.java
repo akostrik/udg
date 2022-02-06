@@ -2,9 +2,9 @@ package functionalInterfaces;
 import java.io.Serializable;
 import java.lang.FunctionalInterface;
 
-import udp.UDP;
+import udg.UDG;
 @FunctionalInterface
 
 public interface AlgoImprove1stSolution extends Serializable {
-  UDP method(UDP firstSolution); 
+  UDG method(UDG firstSolution); 
 }
