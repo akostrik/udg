@@ -1,4 +1,4 @@
-Student project, Sorbonne University, DAAR (Développement des Algorithmes d’Application Réticulaire), Master Informatics 2021/2022 
+Sorbonne University, DAAR (Développement des Algorithmes d’Application Réticulaire), Master Informatics 2021/2022 
 
 # Geometric Graph with Algos
   
