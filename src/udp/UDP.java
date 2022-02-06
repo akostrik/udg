@@ -77,9 +77,9 @@ public class UDP {
     return currentSolution;
   }
 
-  public static UDP repeatWhileCanDoBetter(UDP firstSolution, AlgoImprove1stSolution func) { // = local search
+  public static UDP repeatWhileCanDoBetter(UDP firstSolution, AlgoImprove1stSolution func) { // = Local Search
 	// firstSolution = a valid solution
-	// func.method = removePoints, replace2by1, ...
+	// func.method = tryToRemovePoints, tryToreplace2by1, tryToReplace3by2, ...
     UDP currentSolution  = null;	
     UDP solutionCandidat = firstSolution.clone(); 
     do {

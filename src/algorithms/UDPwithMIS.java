@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import udp.UDP;
 import udp.Vertex;
 
-public class UDPwithMis extends UDP { // maximal independent set
+public class UDPwithMIS extends UDP { // maximal independent set
 
-  public UDPwithMis(ArrayList<Vertex> vertex) { 
+  public UDPwithMIS(ArrayList<Vertex> vertex) { 
     super(vertex);
     this.isSolution                  = (solutionCandidat)                -> { return hasAsMisWithPropriety(solutionCandidat); }; // isMis for other goals
     this.willTryToReplaceTwoPoints   = (Vertex p1, Vertex p2)            -> { return true; }; 
