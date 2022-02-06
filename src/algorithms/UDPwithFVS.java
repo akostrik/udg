@@ -11,8 +11,8 @@ public class UDPwithFVS extends UDP { // feedback vertex set
     this.shouldContinueGreedy         = (currentSolution,rest)           -> { return !this.isSolution.method(currentSolution);};
     this.toRemoveBeforeContinueGreedy = (pointToRemove)                  -> { return new UDP(pointToRemove);};
     this.isSolution                   = (solutionCandidat)               -> { return this.hasAsFVS(solutionCandidat); };
-    this.willTryToReplaceTwoPoints    = (Vertex p1, Vertex p2)           -> { return true;}; 
-    this.willTryToReplaceThreePoints  = (Vertex p1, Vertex p2, Vertex p3)-> {return true;};
+    this.willTryToReplace2Points    = (Vertex p1, Vertex p2)           -> { return true;}; 
+    this.willTryToReplace3Points  = (Vertex p1, Vertex p2, Vertex p3)-> {return true;};
   }
   
   public UDP fvs() {

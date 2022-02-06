@@ -5,6 +5,6 @@ import java.lang.FunctionalInterface;
 import udp.Vertex;
 @FunctionalInterface
 
-public interface WillTryToReplaceTwoPoints extends Serializable {
+public interface WillTryToReplace2Points extends Serializable {
   boolean method(Vertex p1, Vertex p2); 
 }

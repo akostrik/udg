@@ -8,8 +8,8 @@ import java.util.Random;
 import functionalInterfaces.IsSolution;
 import functionalInterfaces.AlgoImprove1stSolution;
 import functionalInterfaces.Algo;
-import functionalInterfaces.WillTryToReplaceTwoPoints;
-import functionalInterfaces.WillTryToReplaceThreePoints;
+import functionalInterfaces.WillTryToReplace2Points;
+import functionalInterfaces.WillTryToReplace3Points;
 import functionalInterfaces.ShouldContinueGreedy;
 import functionalInterfaces.ToRemoveBeforeContinueGreedy;
 import java.awt.Point;
@@ -19,12 +19,12 @@ public class UDP {
   public static int                    edgeThreshold;                       // the only init., here ? in the calling class ?
   public static ArrayList<UDP>         cycles;                              
   public Map<Vertex,UDP>               mapBlackBlueComponents       = null;
-  public AlgoImprove1stSolution        removePoints                 = null; // initialisation in the constructor
-  public AlgoImprove1stSolution        replace2by1                  = null; // initialisation in the constructor
-  public AlgoImprove1stSolution        replace3by2                  = null; // initialisation in the constructor
+  public AlgoImprove1stSolution        tryToRemovePoints            = null; // initialisation in the constructor
+  public AlgoImprove1stSolution        tryToReplace2by1             = null; // initialisation in the constructor
+  public AlgoImprove1stSolution        tryToReplace3by2             = null; // initialisation in the constructor
   public Algo                          greedyAlgo                   = null; // initialisation in the constructor
-  public WillTryToReplaceTwoPoints     willTryToReplaceTwoPoints    = null; // initialisation in sub-classes
-  public WillTryToReplaceThreePoints   willTryToReplaceThreePoints  = null; // initialisation in sub-classes
+  public WillTryToReplace2Points       willTryToReplace2Points      = null; // initialisation in sub-classes
+  public WillTryToReplace3Points       willTryToReplace3Points      = null; // initialisation in sub-classes
   public ShouldContinueGreedy          shouldContinueGreedy         = null; // initialisation in sub-classes
   public ToRemoveBeforeContinueGreedy  toRemoveBeforeContinueGreedy = null; // initialisation in sub-classes
   public IsSolution                    isSolution                   = null; // initialisation in sub-classes
@@ -32,11 +32,11 @@ public class UDP {
   // // // // // // // // // // // // // // CONTRUCTORS
   
   public UDP(ArrayList<Vertex> vertex) {
-    this.vertex       = vertex;   
-    this.removePoints = (firstSolution) -> { return this.tryToRemovePoints(firstSolution); };
-    this.replace2by1  = (firstSolution) -> { return this.tryToReplace2by1 (firstSolution); };
-    this.replace3by2  = (firstSolution) -> { return this.tryToReplace3by2 (firstSolution); };
-    this.greedyAlgo   = (             ) -> { return this.greedyAlgo       (             ); };
+    this.vertex            = vertex;   
+    this.tryToRemovePoints = (firstSolution) -> { return this.tryToRemovePoints(firstSolution); };
+    this.tryToReplace2by1  = (firstSolution) -> { return this.tryToReplace2by1 (firstSolution); };
+    this.tryToReplace3by2  = (firstSolution) -> { return this.tryToReplace3by2 (firstSolution); };
+    this.greedyAlgo        = (             ) -> { return this.greedyAlgo       (             ); };
   }
   
   public UDP(HashSet<Vertex> vertex) {
@@ -66,8 +66,8 @@ public class UDP {
   // // // // // // // // // // // // // // ALGOS
 
   public static UDP repeatNtimes(int N, UDP firstSolution, AlgoImprove1stSolution func) { 
-    UDP currentSolution  = firstSolution.clone(); // serialization?	
-    UDP solutionCandidat = null; // currentSolution; 
+    UDP currentSolution  = firstSolution.clone(); /// serialization insteaf of clone ?	
+    UDP solutionCandidat = null; 
     for (int i=0;i<N;i++) { 
    	  solutionCandidat = func.method(currentSolution); // greedyAlgo();
       if (solutionCandidat.score()<currentSolution.score()) 
@@ -79,7 +79,7 @@ public class UDP {
 
   public static UDP repeatWhileCanDoBetter(UDP firstSolution, AlgoImprove1stSolution func) { // = Local Search
 	// firstSolution = a valid solution
-	// func.method = tryToRemovePoints, tryToreplace2by1, tryToReplace3by2, ...
+	// func = tryToRemovePoints, tryToreplace2by1, tryToReplace3by2, ...
     UDP currentSolution  = null;	
     UDP solutionCandidat = firstSolution.clone(); 
     do {
@@ -107,12 +107,12 @@ public class UDP {
 
   public UDP tryToReplace2by1(UDP firstSolution) { // two points by one
 	UDP solutionCandidat = firstSolution.shuffledClone();
-    /// solutionCandidat = tryToRemovePoints(solutionCandidat); // always should do this? (for mis it is useful)
-    /// if(solutionCandidat.size()==this.size()) return firstSolution;
-    UDP rest = partExternalTo(solutionCandidat).clone(); ///
+    //solutionCandidat = tryToRemovePoints(solutionCandidat); // do not do this
+    //if(solutionCandidat.size()==this.size()) return firstSolution;
+    UDP rest = partExternalTo(solutionCandidat).clone(); 
     for (int i=0;i<solutionCandidat.size();i++) 
       for (int j=i+1;j<solutionCandidat.size();j++) 
-    	if(this.willTryToReplaceTwoPoints.method(solutionCandidat.get(i),solutionCandidat.get(j)))
+    	if(this.willTryToReplace2Points.method(solutionCandidat.get(i),solutionCandidat.get(j)))
           tryToReplace_i_j_by1(i,j,solutionCandidat,rest); 
     return solutionCandidat;
   }
@@ -121,11 +121,11 @@ public class UDP {
 	UDP solutionCandidat = firstSolution.shuffledClone();
 	solutionCandidat = tryToRemovePoints(solutionCandidat); 
     if(solutionCandidat.size()==this.size()) return firstSolution;
-    UDP rest = partExternalTo(solutionCandidat).clone(); ///
+    UDP rest = partExternalTo(solutionCandidat).clone();
     for (int i=0;i<solutionCandidat.size();i++) 
       for (int j=i+1;j<solutionCandidat.size();j++) 
         for (int k=j+1;k<solutionCandidat.size();k++) 
-       	  if(this.willTryToReplaceThreePoints.method(solutionCandidat.get(i),solutionCandidat.get(j),solutionCandidat.get(k)))
+       	  if(this.willTryToReplace3Points.method(solutionCandidat.get(i),solutionCandidat.get(j),solutionCandidat.get(k)))
             tryToReplace_i_j_k_by2(i,j,k,solutionCandidat,rest); 
     return solutionCandidat;
   }

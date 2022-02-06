@@ -18,8 +18,8 @@ public class UDPwithMIS extends UDP { // maximal independent set
   public UDPwithMIS(ArrayList<Vertex> vertex) { 
     super(vertex);
     this.isSolution                  = (solutionCandidat)                -> { return hasAsMisWithPropriety(solutionCandidat); }; // isMis for other goals
-    this.willTryToReplaceTwoPoints   = (Vertex p1, Vertex p2)            -> { return true; }; 
-    this.willTryToReplaceThreePoints = (Vertex p1, Vertex p2, Vertex p3) -> { return true; };
+    this.willTryToReplace2Points   = (Vertex p1, Vertex p2)            -> { return true; }; 
+    this.willTryToReplace3Points = (Vertex p1, Vertex p2, Vertex p3) -> { return true; };
   }
 
   public UDP misWithProperty() { 

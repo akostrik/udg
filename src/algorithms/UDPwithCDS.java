@@ -12,8 +12,8 @@ public class UDPwithCDS extends UDP { // connected dominating set
   public UDPwithCDS(ArrayList<Vertex> vertex) {
     super(vertex);
     this.isSolution                  = (solutionCandidat)                -> { return this.hasAsCDS(solutionCandidat); };
-    this.willTryToReplaceTwoPoints   = (Vertex p1, Vertex p2)            -> { return true; }; 
-    this.willTryToReplaceThreePoints = (Vertex p1, Vertex p2, Vertex p3) -> { return true; };
+    this.willTryToReplace2Points   = (Vertex p1, Vertex p2)            -> { return true; }; 
+    this.willTryToReplace3Points = (Vertex p1, Vertex p2, Vertex p3) -> { return true; };
   }
 
   public UDP cds() { 
