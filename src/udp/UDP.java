@@ -16,10 +16,10 @@ import java.awt.Point;
 
 public class UDP {
   public ArrayList<Vertex>             vertex                       = null; // initialisation in the constructor
-  public static int                    edgeThreshold;                       // the only init., where ? in the calling class ?
-  public static ArrayList<UDP>         cycles;                              // the only initialisation
+  public static int                    edgeThreshold;                       // the only init., here ? in the calling class ?
+  public static ArrayList<UDP>         cycles;                              
   public Map<Vertex,UDP>               mapBlackBlueComponents       = null;
-  public AlgoImprove1stSolution        removePoints                 = null; // initialisation in the constructor ?
+  public AlgoImprove1stSolution        removePoints                 = null; // initialisation in the constructor
   public AlgoImprove1stSolution        replace2by1                  = null; // initialisation in the constructor
   public AlgoImprove1stSolution        replace3by2                  = null; // initialisation in the constructor
   public Algo                          greedyAlgo                   = null; // initialisation in the constructor
@@ -33,10 +33,10 @@ public class UDP {
   
   public UDP(ArrayList<Vertex> vertex) {
     this.vertex       = vertex;   
-    this.removePoints = (firstSolution)   -> { return this.tryToRemovePoints(firstSolution); };
-    this.replace2by1  = (firstSolution)   -> { return this.tryToReplace2by1 (firstSolution); };
-    this.replace3by2  = (firstSolution)   -> { return this.tryToReplace3by2 (firstSolution); };
-    this.greedyAlgo   = ()                -> { return this.greedyAlgo  (             ); };
+    this.removePoints = (firstSolution) -> { return this.tryToRemovePoints(firstSolution); };
+    this.replace2by1  = (firstSolution) -> { return this.tryToReplace2by1 (firstSolution); };
+    this.replace3by2  = (firstSolution) -> { return this.tryToReplace3by2 (firstSolution); };
+    this.greedyAlgo   = (             ) -> { return this.greedyAlgo       (             ); };
   }
   
   public UDP(HashSet<Vertex> vertex) {
@@ -198,7 +198,7 @@ public class UDP {
     return false;
   }
   
-  public ArrayList<UDP> elementaryCycles() { // dns
+  public ArrayList<UDP> elementaryCycles() { // DNS
 	UDP.cycles = new ArrayList<UDP>();
     markAllVertexWhite(); 
     for (Vertex p : vertex) 
@@ -313,9 +313,7 @@ public class UDP {
   public UDP notExploredActiveNeighborhoodWithCentralPoint(Vertex p) { // not clone 
 	UDP neighborhood = new UDP();
 	for (Vertex candidat: this.vertex)
-	  if (candidat.distance(p)<UDP.edgeThreshold && 
-			  candidat.isNotExplored() && 
-			  candidat.active==true) 
+	  if (candidat.distance(p)<UDP.edgeThreshold && candidat.isNotExplored() && candidat.active==true) 
 	    neighborhood.add(candidat);
 	return neighborhood; 
   }
@@ -330,7 +328,7 @@ public class UDP {
 	return neighborhood; 
   }
   public UDP neighborhoodWithInitialPoints(UDP initialPoints) { // not clone 
-	HashSet<Vertex> pointsToAdd = new HashSet<Vertex>(); // HashSet => without duplicata
+	HashSet<Vertex> pointsToAdd = new HashSet<Vertex>(); 
 	for(Vertex p : initialPoints.vertex)
 	  pointsToAdd.addAll(this.neighborhoodWithCentralPoint(p).vertex);
 	initialPoints.addAll(new ArrayList<Vertex>(pointsToAdd));
@@ -342,7 +340,7 @@ public class UDP {
   }
 	  
   public HashSet<Vertex> blackNeighborhoodWithoutInitialPoints(HashSet<Vertex> initialPoints) { // not clone 
-	HashSet<Vertex> blackNeighborhood = new HashSet<Vertex>(); // HashSet => without duplicata
+	HashSet<Vertex> blackNeighborhood = new HashSet<Vertex>(); 
 	for(Vertex initialPoint : initialPoints) 
 	  for(Vertex pointCandidat : this.blackNeighborhoodWithoutCentralPoint(initialPoint).vertex) 
 		if(!initialPoints.contains(pointCandidat)) 
@@ -409,7 +407,7 @@ public class UDP {
     for(int i=this.vertex.size()-1; i>=0; i--) { 
       cycle.add(vertex.get(i));
       if(vertex.get(i).equals(newPoint)) 
-    	break; ///
+    	break; /// ?
     }
     return cycle;
   }
@@ -480,8 +478,7 @@ public class UDP {
   }
 
   public boolean hasAsMisWithPropriety(UDP misToVerify) { 
-    // distance 2 hops
-	// lemma 2 "On greedy construction of CDS in wireless networks" Yingshu Thai Wang Yi Wan Du 
+    // distance 2 hops, lemma 2 "On greedy construction of CDS in wireless networks" Yingshu Thai Wang Yi Wan Du 
     for(int i = 0; i<misToVerify.size(); i++) {
       Vertex p1 = misToVerify.get(i);
       boolean p1hasAPointAt2hops=false;
@@ -499,9 +496,8 @@ public class UDP {
 	return true;
   }
 
-  public boolean hasAsMis(UDP misToVerify) { 
-	// with or without propriety "2 hops distance"
-    for(Vertex p : this.partExternalTo(misToVerify).clone().vertex) /// clone ?
+  public boolean hasAsMis(UDP misToVerify) { // with or without propriety "2 hops distance"
+    for(Vertex p : this.partExternalTo(misToVerify).clone().vertex) 
       if(new UDP(misToVerify.clone().vertex,p).isIndependentSet()) // optimisation possible - verify only p ?
         return false;
 	return true;
@@ -567,7 +563,7 @@ public class UDP {
 	  if(   candidat.countEffectiveDegree(this)> vertexHighest_dAsterix_id.countEffectiveDegree(this) 
 	    || (candidat.countEffectiveDegree(this)==vertexHighest_dAsterix_id.countEffectiveDegree(this) 
 	        &&
-		    this.indexOf(candidat)        > this.indexOf(vertexHighest_dAsterix_id)               )  )           
+		    this.indexOf(candidat) > this.indexOf(vertexHighest_dAsterix_id)                         )  )           
         vertexHighest_dAsterix_id=candidat;
     return vertexHighest_dAsterix_id;
   }
@@ -576,7 +572,7 @@ public class UDP {
     return new ArrayList<Vertex>(g.vertex.subList(g.vertex.indexOf(p)+1,g.vertex.size()));
   }
 	  
-  private void rotateAndMayBeInvertDirectionCycle() { // To Start With Left Top Point 
+  private void rotateAndMayBeInvertDirectionCycle() { // start with left top point 
 	ArrayList<Vertex> normalizedPath = clone(this.vertex);
 	Vertex leftTopPoint = this.leftTopPoint();
 	while (normalizedPath.get(0) != leftTopPoint) {
@@ -618,7 +614,7 @@ public class UDP {
 	if(this.size()!=cycle2.size()) 
 	  return false;
     for(int i=0; i<this.size(); i++)
-	  if(!(this.get(i).x==cycle2.get(i).x && this.get(i).y==cycle2.get(i).y)) /// object==object один и тот же объект в памяти
+	  if(!(this.get(i).x==cycle2.get(i).x && this.get(i).y==cycle2.get(i).y)) 
 	    return false;
     return true;
   }
@@ -641,7 +637,7 @@ public class UDP {
 	  return null;
 	if(rest.neighborhoodWithoutInitialPoints(visitedConnComp).size()>0) 
 	  return rest.neighborhoodWithoutInitialPoints(visitedConnComp).get(0);
-	return rest.get(0); // we take a new connected composant (the previous is treated or it is the beginning of all)
+	return rest.get(0); 
   }
   
   public Vertex theMostConnectedPoint() {
@@ -847,17 +843,4 @@ public class UDP {
    	  allCycles.removeAll(cycle);
     return allCycles;
   }
-}
-
-/* два цикла
-978 231
-752 267
-829 270
-689 278
-989 285
-941 313
-795 321
-704 633
-733 634
-955 639
-*/  
+}  

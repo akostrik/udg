@@ -8,10 +8,10 @@ public class UDPwithFVS extends UDP { // feedback vertex set
 	
   public UDPwithFVS(ArrayList<Vertex> points) {
     super(points);
-    this.shouldContinueGreedy         = (currentSolution,rest)  -> { return !this.isSolution.method(currentSolution);};
-    this.toRemoveBeforeContinueGreedy = (pointToRemove)         -> { return new UDP(pointToRemove);};
-    this.isSolution                   = (solutionCandidat)      -> { return this.hasAsFVS(solutionCandidat); };
-    this.willTryToReplaceTwoPoints    = (Vertex p1, Vertex p2)  -> { return true;}; // try to replace any pair of point by another one
+    this.shouldContinueGreedy         = (currentSolution,rest)           -> { return !this.isSolution.method(currentSolution);};
+    this.toRemoveBeforeContinueGreedy = (pointToRemove)                  -> { return new UDP(pointToRemove);};
+    this.isSolution                   = (solutionCandidat)               -> { return this.hasAsFVS(solutionCandidat); };
+    this.willTryToReplaceTwoPoints    = (Vertex p1, Vertex p2)           -> { return true;}; 
     this.willTryToReplaceThreePoints  = (Vertex p1, Vertex p2, Vertex p3)-> {return true;};
   }
   

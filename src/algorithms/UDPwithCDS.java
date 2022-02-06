@@ -1,22 +1,6 @@
-// https://github.com/LexTek/Convex-Minimum-Dominating-Set UPMC
-// https://github.com/arjunvijayvargiya/ConnectedDominatingSet : i=2 only
-// https://github.com/ThamazghaSMAIL/DominatingSet/tree/master/src/algorithms UPMC
-// https://github.com/cbyad/ConnectedDominatingSetAAGA/tree/master/S_MIS_CDS/src/algorithms UPMC
-// https://github.com/ThamazghaSMAIL/DominatingSet/blob/master/Rapport.pdf UPMC double
-// https://github.com/AlexisBelanger/MinimalConnectedDominatingSet/tree/master/AAGA_Projet2/src/algorithms UPMC
 
 // optimisation - listing all MISs and chois the best one ?
 
-/*
-470 170
-438 194
-448 103
-542 172
-437 148
-404 190
-531 181
-483 179
- */
 package algorithms;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -71,7 +55,7 @@ public class UDPwithCDS extends UDP { // connected dominating set
  	return new ArrayList<UDP>(potentiallyConnectedComponents);
   }
  
-  private void connectBlackBlueComponents(ArrayList<UDP> components, Vertex connector) { /// optimisation not keep all
+  private void connectBlackBlueComponents(ArrayList<UDP> components, Vertex connector) { /// optimisation not keep all UDP
     UDP unitedComponent = components.get(0);
     mapBlackBlueComponents.put(connector,unitedComponent);
     unitedComponent.add(connector);
