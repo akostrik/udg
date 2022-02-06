@@ -15,15 +15,20 @@ import udp.Vertex;
 
 public class UDPwithMisWithProperty extends UDP { // maximal independent set
 
-  public UDPwithMisWithProperty(ArrayList<Vertex> vertex) { // input UPD must be connected 
+  public UDPwithMisWithProperty(ArrayList<Vertex> vertex) { 
     super(vertex);
-    this.isSolution = (solutionCandidat) -> { return isMisWithPropriety(solutionCandidat); }; // isMis for other goals
-    this.willTryToReplaceTwoPoints   = (Vertex p1, Vertex p2)  -> { return true; }; // try to replace any pair of point by another one
-    this.willTryToReplaceThreePoints = (Vertex p1, Vertex p2, Vertex p3)-> {return true;};
+    this.isSolution                  = (solutionCandidat)                -> { return hasAsMisWithPropriety(solutionCandidat); }; // isMis for other goals
+    this.willTryToReplaceTwoPoints   = (Vertex p1, Vertex p2)            -> { return true; }; 
+    this.willTryToReplaceThreePoints = (Vertex p1, Vertex p2, Vertex p3) -> { return true; };
   }
 
   public UDP mis() { 
-	markAllVertexWhite(); 
+    if(!this.isConnected()) {
+      System.out.println("input UPD must be connected ");
+      return new UDP();
+    }
+
+    markAllVertexWhite(); 
 
     while(this.whiteVertex().size()>0) { // main cycle
       Vertex dominator = newDominators(); 
@@ -36,9 +41,8 @@ public class UDPwithMisWithProperty extends UDP { // maximal independent set
     } 
     
     UDP mis=this.blackVertex(); // dominator black, dominatee grey
+	// mis=tryToReplace2by1(mis); too long
 	System.out.println("1) mis = "+mis.toString());
-	mis=tryToReplace2by1(mis);
-    System.out.println("2) mis = "+mis.toString());
     return mis; 
   }  
 

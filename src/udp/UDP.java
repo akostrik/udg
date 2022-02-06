@@ -92,12 +92,8 @@ public class UDP {
 
   public UDP tryToRemovePoints(UDP firstSolution) { 
     UDP solutionCandidat = firstSolution.shuffledClone(); 
-	System.out.println("F. tryToRemovePoints solutionCandidat = "+solutionCandidat.toString());
-    for (int i=0;i<solutionCandidat.size();i++) {
-      // System.out.println("try to remove "+i);
+    for (int i=0;i<solutionCandidat.size();i++) 
       tryToRemove_i(i,solutionCandidat);     
-      if(i>=3) break;
-    }
     return solutionCandidat;
   }
   
@@ -109,11 +105,11 @@ public class UDP {
     solutionCandidat.add(i,removed);
    }
 
-  public UDP tryToReplace2by1(UDP firstSolution) { // try to replace two points by one
+  public UDP tryToReplace2by1(UDP firstSolution) { // two points by one
 	UDP solutionCandidat = firstSolution.shuffledClone();
-    /// solutionCandidat = tryToRemovePoints(solutionCandidat); // always should do this? (for mis no need)
+    /// solutionCandidat = tryToRemovePoints(solutionCandidat); // always should do this? (for mis it is useful)
     /// if(solutionCandidat.size()==this.size()) return firstSolution;
-    UDP rest = clonePartExternalTo(solutionCandidat);
+    UDP rest = partExternalTo(solutionCandidat).clone(); ///
     for (int i=0;i<solutionCandidat.size();i++) 
       for (int j=i+1;j<solutionCandidat.size();j++) 
     	if(this.willTryToReplaceTwoPoints.method(solutionCandidat.get(i),solutionCandidat.get(j)))
@@ -121,11 +117,11 @@ public class UDP {
     return solutionCandidat;
   }
 
-  public UDP tryToReplace3by2(UDP firstSolution) { // try to replace three points by two
+  public UDP tryToReplace3by2(UDP firstSolution) { // three points by two
 	UDP solutionCandidat = firstSolution.shuffledClone();
 	solutionCandidat = tryToRemovePoints(solutionCandidat); 
     if(solutionCandidat.size()==this.size()) return firstSolution;
-    UDP rest = clonePartExternalTo(solutionCandidat);
+    UDP rest = partExternalTo(solutionCandidat).clone(); ///
     for (int i=0;i<solutionCandidat.size();i++) 
       for (int j=i+1;j<solutionCandidat.size();j++) 
         for (int k=j+1;k<solutionCandidat.size();k++) 
@@ -235,18 +231,18 @@ public class UDP {
 	return new UDP(clone(this.vertex)); 
   }
 
-  public UDP clonePartExternalTo(UDP g) {
+  public UDP clonePartExternalTo2(UDP g) {
     UDP rest = this.clone();
     rest.removeAll(g);
-    return rest; // partExternalTo(UDP g).clone();
+    return rest; 
   }
 
   public UDP partExternalTo(UDP g) { // not clone
-    ArrayList<Vertex> rest = new ArrayList<Vertex>(); 
+    ArrayList<Vertex> extrenalPart = new ArrayList<Vertex>(); 
     for(Vertex p : vertex)
       if(!g.contains(p))
-    	rest.add(p);
-    return new UDP(rest);
+    	extrenalPart.add(p);
+    return new UDP(extrenalPart);
   }
 
   public UDP cloneAndAddVertex(Vertex p) {
@@ -317,7 +313,9 @@ public class UDP {
   public UDP notExploredActiveNeighborhoodWithCentralPoint(Vertex p) { // not clone 
 	UDP neighborhood = new UDP();
 	for (Vertex candidat: this.vertex)
-	  if (candidat.distance(p)<UDP.edgeThreshold && candidat.isNotExplored() && candidat.active==true) 
+	  if (candidat.distance(p)<UDP.edgeThreshold && 
+			  candidat.isNotExplored() && 
+			  candidat.active==true) 
 	    neighborhood.add(candidat);
 	return neighborhood; 
   }
@@ -339,30 +337,24 @@ public class UDP {
 	return initialPoints; 
   }
 
-  public HashSet<Vertex> blackNeighborhoodWithoutInitialPoints(HashSet<Vertex> initialPoints) { // not clone 
-    // System.out.println("    ** blackNeighborhoodWithoutInitialPoints("+initialPoints.toString()+")");
-	HashSet<Vertex> blackNeighborhood = new HashSet<Vertex>(); // HashSet => without duplicata
-	for(Vertex initialPoint : initialPoints) 
-	  for(Vertex pointCandidat : this.blackNeighborhoodWithoutCentralPoint(initialPoint).vertex) {
-	    // System.out.println("    ** add "+pointCandidat.toString()+" ?");
-		if(!initialPoints.contains(pointCandidat)) {
-		  blackNeighborhood.add(pointCandidat);
-		  // System.out.println("    ** oui");
-		}
-	  }
-	return blackNeighborhood; 
-  }
-
   public UDP blackNeighborhoodWithoutInitialPoints(UDP initialPoints) { // not clone 
     return new UDP(blackNeighborhoodWithoutInitialPoints(new HashSet<Vertex>(initialPoints.vertex)));
   }
-  
-  public UDP neighborhoodWithoutInitialPoints(UDP initialPoints) { // not clone // initialPoints excluded
+	  
+  public HashSet<Vertex> blackNeighborhoodWithoutInitialPoints(HashSet<Vertex> initialPoints) { // not clone 
+	HashSet<Vertex> blackNeighborhood = new HashSet<Vertex>(); // HashSet => without duplicata
+	for(Vertex initialPoint : initialPoints) 
+	  for(Vertex pointCandidat : this.blackNeighborhoodWithoutCentralPoint(initialPoint).vertex) 
+		if(!initialPoints.contains(pointCandidat)) 
+		  blackNeighborhood.add(pointCandidat);
+	return blackNeighborhood; 
+  }
+
+  public UDP neighborhoodWithoutInitialPoints(UDP initialPoints) { // not clone 
 	UDP toReturn = neighborhoodWithInitialPoints(initialPoints); 
 	toReturn.removeAll(initialPoints);
 	return toReturn;
   }
-
 
   public UDP notExploredVertex() {
 	return whiteVertex();
@@ -423,38 +415,48 @@ public class UDP {
   }
 
   public Map<Vertex,UDP> blackComponents() { // not clone
-    // int i=1;
 	Map<Vertex,UDP> mapBlackComponents = new HashMap<Vertex, UDP>(); 
     UDP rest = this.blackVertex().clone();
 	while(rest.size()>0) {
-	  // System.out.println("  ********** blackComponents ");
-	  // System.out.println("  rest = "+rest.toStringWithColorsDegrees());
 	  Vertex blackPoint = rest.get(0);
 	  UDP blackComponent = blackComponent(blackPoint);
-	  // System.out.println("  blackComponent = "+blackComponent.toStringWithColorsDegrees());
 	  mapBlackComponents.put(blackPoint,blackComponent);
-	  // System.out.println("  mapBlackComponents = "+mapBlackComponents.toString());
 	  rest.removeAll(blackComponent);
-	  // System.out.println("  rest = "+rest.toString());
-	  // if(++i>5) break;
 	}
     return mapBlackComponents;
   }
   
   public UDP blackComponent(Vertex blackPoint) { // not clone
-	// System.out.println("  * blackComponent");
 	HashSet<Vertex> blackComponent = new HashSet<Vertex>();
 	blackComponent.add(blackPoint);
-	HashSet<Vertex> toAdd = new HashSet<Vertex>();
-	do {
-	  toAdd = blackNeighborhoodWithoutInitialPoints(blackComponent);
-	  // System.out.println("  * toAdd = "+toAdd.toString());
+	while(true) {
+	  HashSet<Vertex> toAdd = blackNeighborhoodWithoutInitialPoints(blackComponent);
 	  blackComponent.addAll(toAdd);
-	  // System.out.println("  * blackComponent = "+blackComponent.toString());
-	} while(toAdd.size()>0);
+	  if(toAdd.size()==0) break; /// ?
+	} 
 	return new UDP(blackComponent);
   }
 
+  public UDP connectedComponent(Vertex p0) { // not clone
+	HashSet<Vertex> component = new HashSet<Vertex>();
+	component.add(p0);
+	while(true) {
+	  HashSet<Vertex> toAdd = new HashSet<Vertex>();
+      for(Vertex candidat : this.partExternalTo(new UDP(component)).vertex)
+	    for(Vertex pointComponent : component)
+		  if(isEdge(candidat,pointComponent))
+		    toAdd.add(candidat);
+	  component.addAll(toAdd);
+	  if(toAdd.size()==0) break; /// ?
+	} 
+	UDP componentAsUDP = new UDP(component);
+	return componentAsUDP;
+  }
+
+  public boolean isConnected() { 
+	return this.cloneWithoutDuplicata().size()==this.connectedComponent(this.get(0)).size();
+  }
+  
   // // // // // // // // // // // // // UTILS
 
   public boolean distanceExactlyTwoHops(Vertex p1, Vertex p2) {
@@ -477,7 +479,7 @@ public class UDP {
 	return false;
   }
 
-  public boolean isMisWithPropriety(UDP misToVerify) { 
+  public boolean hasAsMisWithPropriety(UDP misToVerify) { 
     // distance 2 hops
 	// lemma 2 "On greedy construction of CDS in wireless networks" Yingshu Thai Wang Yi Wan Du 
     for(int i = 0; i<misToVerify.size(); i++) {
@@ -489,7 +491,7 @@ public class UDP {
     	if(isEdge(p1,p2)) return false;
         if(distanceExactlyTwoHops(p1,p2)) {
           p1hasAPointAt2hops = true;
-          break; // without break?
+          break;                        /// without break?
         }
       }
       if(!p1hasAPointAt2hops) return false;
@@ -497,8 +499,9 @@ public class UDP {
 	return true;
   }
 
-  public boolean isMis(UDP misToVerify) { 
-    for(Vertex p : this.clonePartExternalTo(misToVerify).vertex) 
+  public boolean hasAsMis(UDP misToVerify) { 
+	// with or without propriety "2 hops distance"
+    for(Vertex p : this.partExternalTo(misToVerify).clone().vertex) /// clone ?
       if(new UDP(misToVerify.clone().vertex,p).isIndependentSet()) // optimisation possible - verify only p ?
         return false;
 	return true;
@@ -516,6 +519,27 @@ public class UDP {
  	return true;
   }
 
+  public boolean hasAsCDS(UDP cdsToVerify) { 
+    return this.hasAsDS(cdsToVerify) && cdsToVerify.isConnected();
+  }
+  
+  public boolean hasAsDS(UDP dsToVerify) { 
+	if(dsToVerify.isEmpty()) return false;
+    for(Vertex p : vertex) {
+      boolean pointIsVisited=false;
+      for(Vertex pDs : dsToVerify.vertex)  
+	    if (isEdgeOrEqualPoints(p,pDs)) 
+	      pointIsVisited=true;
+      if(!pointIsVisited)
+        return false;
+    }
+   return true;
+  }
+
+  public boolean hasAsFVS(UDP fvsToVerify) {
+	return !this.partExternalTo(fvsToVerify).clone().cyclesExist();
+  }
+  
   public Vertex anyNotExploredActiveVertex() { 
 	for(Vertex p : vertex)
 	  if(p.isWhite() && p.active==true)
