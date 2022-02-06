@@ -3,11 +3,13 @@ Sorbonne University, DAAR (Développement des Algorithmes d’Application Rétic
 # UDG, Unit Disk Graph with Algos
   
 * k-means:
-   
+  - Algo de l'article "k-means++: The advantages of careful seeding" by Arthur, Vassilvitskii - soon
 
 * FVS, Feedback Vertex Set:
-   
- 
+  - Greedy
+  - Optimisation by Local Search 
+  - Algo de l'article "A 2-approximation algorithm for the undirected feedback vertex set problem" by Bafna, Berman, Fujito (1999) - soon
+
 * MIS, Maximal Independent Set:
   - Algo naiv
   - Non-distribied version of the algo MIS (MIS with property of 2-hops distance) of the article "Connected Domination in Multihop Ad Hoc Wireless Networks" by Cardei, Cheng, Cheng, Du (2002)
