@@ -11,5 +11,6 @@ Geometric graph with algos :
 
 * DS Dominating Set :
 
-* CDS Conected Domitating Set : Algo of the article "On greedy construction of CDS in wireless networks" by Yingshu, Thai, Wang, Yi, Wan, Du (2005)
+* CDS Conected Domitating Set : 
+  - Algo of the article "On greedy construction of CDS in wireless networks" by Yingshu, Thai, Wang, Yi, Wan, Du (2005)
  
