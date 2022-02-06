@@ -1,7 +1,7 @@
 # udp
-Geometric Graph with algos:
+Geometric Graph with Algos:
 
-* kmeans
+* k-means
 
 * FVS Feedback Vertex Set
  
