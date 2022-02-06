@@ -2,12 +2,13 @@
 Student project, Sorbonne University, DAAR (Développement des Algorithmes d’Application Réticulaire), Master Informatics 2021/2022 
 
 *Geometric Graph with Algos:*
-
+  -
+  
 * k-means:
-  - 
+   
 
 * FVS Feedback Vertex Set:
-  - 
+   
  
 * MIS Maximal Independent Set:
   - Algo naiv
@@ -20,6 +21,7 @@ Student project, Sorbonne University, DAAR (Développement des Algorithmes d’A
 
 
 *Other realisations:* 
+-
 - https://github.com/LexTek/Convex-Minimum-Dominating-Set (Sorbonne)
 - https://github.com/arjunvijayvargiya/ConnectedDominatingSet (i=2 only ?)
 - https://github.com/ThamazghaSMAIL/DominatingSet/tree/master/src/algorithms (Sorbonne)
