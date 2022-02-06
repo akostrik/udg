@@ -15,14 +15,9 @@ Geometric Graph with Algos:
   - Algo of the article "On greedy construction of CDS in wireless networks" by Yingshu, Thai, Wang, Yi, Wan, Du (2005)
 
 
-Other realisations : 
-
-https://github.com/LexTek/Convex-Minimum-Dominating-Set (Sorbonne)
-
-https://github.com/arjunvijayvargiya/ConnectedDominatingSet (i=2 only ?)
-
-https://github.com/ThamazghaSMAIL/DominatingSet/tree/master/src/algorithms (Sorbonne)
-
-https://github.com/cbyad/ConnectedDominatingSetAAGA/tree/master/S_MIS_CDS/src/algorithms (Sorbonne)
-
-https://github.com/AlexisBelanger/MinimalConnectedDominatingSet/tree/master/AAGA_Projet2/src/algorithms (Sorbonne)
+*Other realisations :* 
+- https://github.com/LexTek/Convex-Minimum-Dominating-Set (Sorbonne)
+- https://github.com/arjunvijayvargiya/ConnectedDominatingSet (i=2 only ?)
+- https://github.com/ThamazghaSMAIL/DominatingSet/tree/master/src/algorithms (Sorbonne)
+- https://github.com/cbyad/ConnectedDominatingSetAAGA/tree/master/S_MIS_CDS/src/algorithms (Sorbonne)
+- https://github.com/AlexisBelanger/MinimalConnectedDominatingSet/tree/master/AAGA_Projet2/src/algorithms (Sorbonne)
