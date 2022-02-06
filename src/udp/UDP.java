@@ -17,6 +17,8 @@ import java.awt.Point;
 public class UDP {
   public ArrayList<Vertex>             vertex                       = null; // initialisation in the constructor
   public static int                    edgeThreshold;                       // the only init., here ? in the calling class ?
+  public static int                    K;                                   // for algo kmeans
+  public Vertex                        center                       = null; // for algo kmeans, center = mean point
   public static ArrayList<UDP>         cycles;                              
   public Map<Vertex,UDP>               mapBlackBlueComponents       = null;
   public AlgoImprove1stSolution        tryToRemovePoints            = null; // initialisation in the constructor
@@ -456,6 +458,28 @@ public class UDP {
   }
   
   // // // // // // // // // // // // // UTILS
+
+  public Vertex barycenter() {
+    if(vertex.size()==0) 
+	  return null; 
+    int summeOfX=0, summeOfY=0;
+    for(Vertex p : this.vertex) { /// stream ?
+	  summeOfX+=p.x;  
+	  summeOfY+=p.y;  
+    }
+    return new Vertex(summeOfX/vertex.size(),summeOfY/vertex.size());
+  }
+
+  public boolean deplacingCentreToBarycenterHasMadeChanges() { /// tmp
+	if(this.vertex.size()==0)
+	  return false;
+	Vertex barycenter=barycenter();
+    if(barycenter.x==center.x && barycenter.y==center.y ) // compare as objects ?
+      return false;
+   	this.center = barycenter;
+	  //System.out.println("new center = barycenter = "+barycenter);
+   	return true;
+  }
 
   public boolean distanceExactlyTwoHops(Vertex p1, Vertex p2) {
     if(isEdge(p1,p2)) return false;
