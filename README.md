@@ -1,5 +1,5 @@
 # udp
-Geometric Graph with Algos:
+*Geometric Graph with Algos:*
 
 * k-means
 
