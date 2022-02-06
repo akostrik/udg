@@ -9,8 +9,8 @@ public class DefaultTeam {
 	UDP.edgeThreshold = edgeThreshold;
 
 	// UDP solution = new UDPWithFVS(Vertex.transformToVertex(points)).fvs();
-	// UDP solution = new UDPwithMisWithProperty(Vertex.transformToVertex(points)).mis(); 
-	UDP solution = new UDPwithCDS(Vertex.transformToVertex(points)).cds();
+	UDP solution = new UDPwithMis(Vertex.transformToVertex(points)).misWithProperty(); 
+	// UDP solution = new UDPwithCDS(Vertex.transformToVertex(points)).cds();
 
 	System.out.println("solution: "+solution.toString());
 	return solution.convertToPoints();

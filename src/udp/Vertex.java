@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 
-import algorithms.UDPwithMisWithProperty;
+import algorithms.UDPwithMis;
 
 public class Vertex extends Point {
   public Color   color;

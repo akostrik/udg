@@ -34,15 +34,14 @@ public class UDPwithCDS extends UDP { // connected dominating set
 
   public UDP cds() { 
 	UDP cds=cdsAlgoArticle(); 
-    System.out.println("1) cds = "+cds.toStringWithColorsDegrees());
 	cds = this.tryToRemovePoints(cds); 
 	// cds = this.tryToReplace2by1(cds); // too long
-	System.out.println("2) cds = "+cds.toStringWithColorsDegrees());
+	System.out.println(" cds = "+cds.toStringWithColorsDegrees());
     return cds;	
   }
   
   private UDP cdsAlgoArticle() { // "On greedy construction of CDS in wireless networks" Yingshu Thai Wang Yi Wan Du 
-	UDP mis = new UDPwithMisWithProperty(vertex).mis(); 
+	UDP mis = new UDPwithMis(vertex).misWithProperty(); 
     System.out.println("mis = "+mis.toStringWithColorsDegrees());
 	this.markVertexBlack(mis);
   	this.partExternalTo(mis).markAllVertexGrey();

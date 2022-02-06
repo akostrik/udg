@@ -12,13 +12,9 @@ public class UDPwithDS extends UDP { // dominating set
   }
 
   public UDP ds() {
-    return strategy();
-  }
-  
-  public UDP strategy() {
-	  UDP solution = null;
+    UDP solution = null;
     // solution = greedyAlgo();
-    // this.funcInterf    = (surrentSolution)-> { return this.replace2by1(surrentSolution);}; // very long
+    // this.funcInterf    = (surrentSolution)-> { return this.replace2by1(surrentSolution);}; // too long
 
     solution = repeatWhileCanDoBetter(this,(surrentSolution)-> { return this.tryToRemovePoints(surrentSolution);});
     //this.funcInterf     = (surrentSolution)-> { return this.replace2by1(surrentSolution);};
