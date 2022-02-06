@@ -1,5 +1,5 @@
 # udp
-Geometric graph with algos :
+Geometric Graph with algos:
 
 * kmeans
 
