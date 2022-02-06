@@ -1,6 +1,6 @@
 Sorbonne University, DAAR (Développement des Algorithmes d’Application Réticulaire), Master Informatics 2021/2022 
 
-# Geometric Graph with Algos
+# UDG, Unit Disk Graph with Algos
   
 * k-means:
    
@@ -14,10 +14,11 @@ Sorbonne University, DAAR (Développement des Algorithmes d’Application Rétic
 
 * DS, Dominating Set:
   - Greedy
-  - Local Search 
+  - Optimisation by Local Search 
+  - Optimisation of the article "A PTAS for the minimum domimation set problem in unit disk graphs" by Nieberg, Hurink (2008) - soon
 
 * CDS, Conected Domitating Set: 
-  - Algo of the article "On greedy construction of CDS in wireless networks" by Yingshu, Thai, Wang, Yi, Wan, Du (2005)
+  - Algo of the article "On greedy construction of CDS in wireless networks" by Yingshu, Thai, Wang, Yi, Wan, Du (2005) (the program only, no report)
 
 
 # Other realisations
