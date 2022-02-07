@@ -13,8 +13,8 @@ public class UDGwithCDS extends UDG { // connected dominating set
   public UDGwithCDS(ArrayList<Vertex> vertex) {
     super(vertex);
     this.isSolution                  = (solutionCandidat)                -> { return this.hasAsCDS(solutionCandidat); };
-    this.willTryToReplace2Points   = (Vertex p1, Vertex p2)            -> { return true; }; 
-    this.willTryToReplace3Points = (Vertex p1, Vertex p2, Vertex p3) -> { return true; };
+    this.shouldTryToReplace2Points   = (Vertex p1, Vertex p2)            -> { return true; }; 
+    this.shouldTryToReplace3Points = (Vertex p1, Vertex p2, Vertex p3) -> { return true; };
   }
 
   public UDG cds() { 
@@ -26,7 +26,7 @@ public class UDGwithCDS extends UDG { // connected dominating set
   }
   
   private UDG cdsAlgoArticle() { // "On greedy construction of CDS in wireless networks" Yingshu Thai Wang Yi Wan Du 
-	UDG mis = new UDGwithMIS(vertex).misWithProperty(); 
+	UDG mis = new UDGwithMIS(verices).misWithProperty(); 
     System.out.println("mis = "+mis.toStringWithColorsDegrees());
 	this.markVertexBlack(mis);
   	this.partExternalTo(mis).markAllVertexGrey();
@@ -35,7 +35,7 @@ public class UDGwithCDS extends UDG { // connected dominating set
 	// connect 2/3/4/5 blackBlueComposants par anyGreyNodeAdjacentToAtLeast_i_blackNodesInDiffBlackBlueComponents
     for(int i=5; i>=2; i--) /// optimisation - lorsque i=5 trouvé pour i=2
       for(boolean changements=true; changements==true; changements=false)
-        for(Vertex connector : this.greyVertex().vertex) {
+        for(Vertex connector : this.greyVertex().verices) {
           ArrayList<UDG> potentiallyConnectedComponents = potentiallyConnectedBlackBlueComponents(connector);
        	  System.out.println("i="+i+", "+connector.toString()+ " can connect components : "+potentiallyConnectedComponents.toString());
     	  if(potentiallyConnectedComponents!=null && potentiallyConnectedComponents.size()==i) {
@@ -49,7 +49,7 @@ public class UDGwithCDS extends UDG { // connected dominating set
 
   private ArrayList<UDG> potentiallyConnectedBlackBlueComponents(Vertex connector) { 
 	HashSet<UDG> potentiallyConnectedComponents = new HashSet<UDG>(); 
-    for (Vertex blackNeighborOfConnector : this.blackNeighborhoodWithoutCentralPoint(connector).vertex) 
+    for (Vertex blackNeighborOfConnector : this.blackNeighborhoodWithoutCentralPoint(connector).verices) 
       for (UDG component : this.mapBlackBlueComponents.values()) 
     	if (component.contains(blackNeighborOfConnector)) 
     	  potentiallyConnectedComponents.add(component); 
@@ -62,7 +62,7 @@ public class UDGwithCDS extends UDG { // connected dominating set
     unitedComponent.add(connector);
   	for(int i=1; i<components.size(); i++) {
 	  UDG component = components.get(i);
-	  for(Vertex p : component.vertex) {
+	  for(Vertex p : component.verices) {
 		mapBlackBlueComponents.remove(p,component);
 	    mapBlackBlueComponents.put(p,unitedComponent);
 	    unitedComponent.add(p);

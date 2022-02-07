@@ -8,11 +8,11 @@ public class UDGwithFVS extends UDG { // feedback vertex set
 	
   public UDGwithFVS(ArrayList<Vertex> points) {
     super(points);
-    this.shouldContinueGreedy         = (currentSolution,rest)           -> { return !this.isSolution.method(currentSolution);};
-    this.toRemoveBeforeContinueGreedy = (pointToRemove)                  -> { return new UDG(pointToRemove);};
-    this.isSolution                   = (solutionCandidat)               -> { return this.hasAsFVS(solutionCandidat); };
-    this.willTryToReplace2Points    = (Vertex p1, Vertex p2)           -> { return true;}; 
-    this.willTryToReplace3Points  = (Vertex p1, Vertex p2, Vertex p3)-> {return true;};
+    this.shouldContinueGreedy         = (currentSolution,rest)           -> { return !this.isSolution.method(currentSolution); };
+    this.toRemoveBeforeContinueGreedy = (pointsToRemove)                 -> { return new UDG(pointsToRemove);                   };
+    this.isSolution                   = (solutionCandidat)               -> { return this.hasAsFVS(solutionCandidat);          };
+    this.shouldTryToReplace2Points    = (Vertex p1, Vertex p2)           -> { return true;                                     }; 
+    this.shouldTryToReplace3Points    = (Vertex p1, Vertex p2, Vertex p3)-> { return true;                                     };
   }
   
   public UDG fvs() {

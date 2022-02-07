@@ -19,8 +19,8 @@ public class UDGwithMIS extends UDG { // maximal independent set
   public UDGwithMIS(ArrayList<Vertex> vertex) { 
     super(vertex);
     this.isSolution                  = (solutionCandidat)                -> { return hasAsMisWithPropriety(solutionCandidat); }; // isMis for other goals
-    this.willTryToReplace2Points   = (Vertex p1, Vertex p2)            -> { return true; }; 
-    this.willTryToReplace3Points = (Vertex p1, Vertex p2, Vertex p3) -> { return true; };
+    this.shouldTryToReplace2Points   = (Vertex p1, Vertex p2)            -> { return true; }; 
+    this.shouldTryToReplace3Points = (Vertex p1, Vertex p2, Vertex p3) -> { return true; };
   }
 
   public UDG misWithProperty() { 
@@ -36,9 +36,9 @@ public class UDGwithMIS extends UDG { // maximal independent set
       System.out.println("mis, rest "+this.whiteVertex().size()+" vertex");
       Vertex dominator = newDominators(); 
       dominator.markAsDominator();
-  	  for(Vertex dominatee : notExploredNeighborhoodWithoutCentralPoint(dominator).vertex) { 
+  	  for(Vertex dominatee : notExploredNeighborhoodWithoutCentralPoint(dominator).verices) { 
 	    dominatee.markDominatee();
-    	for(Vertex neighborOfDominatee : notExploredNeighborhoodWithoutCentralPoint(dominatee).vertex)  
+    	for(Vertex neighborOfDominatee : notExploredNeighborhoodWithoutCentralPoint(dominatee).verices)  
     	  neighborOfDominatee.setActive();
   	  }
     } 

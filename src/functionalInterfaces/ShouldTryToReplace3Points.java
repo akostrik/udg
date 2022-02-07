@@ -5,6 +5,6 @@ import java.lang.FunctionalInterface;
 import udg.Vertex;
 @FunctionalInterface
 
-public interface WillTryToReplace2Points extends Serializable {
-  boolean method(Vertex p1, Vertex p2); 
+public interface ShouldTryToReplace3Points extends Serializable {
+  boolean method(Vertex p1, Vertex p2, Vertex p3); 
 }
