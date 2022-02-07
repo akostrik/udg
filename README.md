@@ -4,7 +4,7 @@ Sorbonne University, Master Informatics, DAAR (DÃ©veloppement des Algorithmes dâ
 *UDP*, *Geometric graph* G=(V,E) in a 2D plane: a set of points in the plane called vertices, and a threshold on the distance between the points : there is an edge between two vertices if and only if the Euclidean distance between the two vertices is smaller than this threshold.
   
 ## k-means
-The *k-means clustering* is a partition of S into k parties in such a way that the total sum of distances between each element of a party to the barycenter of that party is minimized.
+The *k-means clustering* is a partition of V into k parties in such a way that the total sum of distances between each element of a party to the barycenter of that party is minimized.
   - Algo de l'article "k-means++: The advantages of careful seeding" by Arthur, Vassilvitskii - soon
 
 ## FVS, Feedback Vertex Set
