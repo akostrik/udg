@@ -13,20 +13,16 @@ public class Vertex extends Point {
   public boolean hasBroadcastedToBlackNeighbors; // for algo MIS
 
   public Vertex(int x, int y) {
-    this.x                                       = x;
-    this.y                                       = y;
-    this.color                                   = Color.WHITE;
-    this.active                                  = false;
-    this.dominator                               = null;
+    super(x,y);
+    this.color  = Color.WHITE;
+    this.active = false;
   }
 
-  public Vertex(int x, int y, Color color, boolean active, Vertex dominator) {
-    this.x                                       = x;
-    this.y                                       = y;
-    this.color                                   = color;
-    this.active                                  = active;
-    this.dominator                               = dominator;
-  }
+ /* /// public Vertex(int x, int y, Color color, boolean active) {
+    super(x,y);
+    this.color  = color;
+    this.active = active;
+  }*/
   
   public int countEffectiveDegree(UDG g) {
 	return g.notExploredNeighborhoodWithoutCentralPoint(this).size();
@@ -101,7 +97,7 @@ public class Vertex extends Point {
   //////////////////// UTILS
 
   public Vertex clone() {
-	return new Vertex(this.x,this.y,this.color,this.active,this.dominator);
+	return new Vertex(this.x,this.y,this.color,this.active);
   }
   
   public boolean equals(Vertex other) {

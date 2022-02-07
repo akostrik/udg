@@ -36,9 +36,9 @@ public class UDGwithMIS extends UDG { // maximal independent set
       System.out.println("mis, rest "+this.whiteVertex().size()+" vertex");
       Vertex dominator = newDominators(); 
       dominator.markAsDominator();
-  	  for(Vertex dominatee : notExploredNeighborhoodWithoutCentralPoint(dominator).verices) { 
+  	  for(Vertex dominatee : notExploredNeighborhoodWithoutCentralPoint(dominator).vertices) { 
 	    dominatee.markDominatee();
-    	for(Vertex neighborOfDominatee : notExploredNeighborhoodWithoutCentralPoint(dominatee).verices)  
+    	for(Vertex neighborOfDominatee : notExploredNeighborhoodWithoutCentralPoint(dominatee).vertices)  
     	  neighborOfDominatee.setActive();
   	  }
     } 

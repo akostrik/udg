@@ -10,7 +10,7 @@ public class UDGwithDS extends UDG { // dominating set
     super(vertex);
     this.isSolution                   = (solutionCandidat)     -> { return hasAsDS(solutionCandidat); }; 
     this.shouldContinueGreedy         = (currentSolution,rest) -> { return rest.isNotEmpty();}; // ok
-    this.toRemoveBeforeContinueGreedy = (pointsToRemove)       -> { return new UDG(neighborhoodWithCentralPoint(pointsToRemove).verices);}; 
+    this.toRemoveBeforeContinueGreedy = (pointsToRemove)       -> { return new UDG(neighborhoodWithCentralPoint(pointsToRemove).vertices);}; 
     this.shouldTryToReplace2Points      = (Vertex p1, Vertex p2) -> { return p1.distance(p2)<4*edgeThreshold; }; // ?
 
     this.shouldTryToReplace3Points      = (Vertex p1, Vertex p2, Vertex p3)-> { // ?

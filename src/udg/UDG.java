@@ -15,9 +15,8 @@ import functionalInterfaces.ToRemoveBeforeContinueGreedy;
 import java.awt.Point;
 
 public class UDG {
-  public ArrayList<Vertex>             verices                      = null; // initialisation in the constructor
+  public ArrayList<Vertex>             vertices                      = null; // initialisation in the constructor
   public static int                    edgeThreshold;                       // the only init., here ? in the calling class ?
-  public static ArrayList<UDG>         cycles;                              
   public Map<Vertex,UDG>               mapBlackBlueComponents       = null;
   public AlgoImproveSolution           tryToRemovePoints            = null; // initialisation in the constructor
   public AlgoImproveSolution           tryToReplace2by1             = null; // initialisation in the constructor
@@ -32,7 +31,7 @@ public class UDG {
   // // // // // // // // // // // // // // CONTRUCTORS
   
   public UDG(ArrayList<Vertex> vertices) {
-    this.verices            = vertices;   
+    this.vertices            = vertices;   
     this.tryToRemovePoints = (firstSolution) -> { return this.tryToRemovePoints(firstSolution); };
     this.tryToReplace2by1  = (firstSolution) -> { return this.tryToReplace2by1 (firstSolution); };
     this.tryToReplace3by2  = (firstSolution) -> { return this.tryToReplace3by2 (firstSolution); };
@@ -132,7 +131,7 @@ public class UDG {
     System.out.println("try to replace "+i+" "+j+" "+solution.toString());
     Vertex removedJ = solution.remove(j); // j>i
     Vertex removedI = solution.remove(i);
-    for (Vertex added: rest.verices) {
+    for (Vertex added: rest.vertices) {
       solution.add(added);
       if (this.isSolution.method(solution)) { 
     	rest.remove(added);
@@ -149,9 +148,9 @@ public class UDG {
     Vertex removedK = solution.remove(k);
     Vertex removedJ = solution.remove(j);
     Vertex removedI = solution.remove(i);
-    for (Vertex added1: rest.verices) {
+    for (Vertex added1: rest.vertices) {
       solution.add(added1);
-      for (Vertex added2: rest.verices) { 
+      for (Vertex added2: rest.vertices) { 
         solution.add(added2);
         if (this.isSolution.method(solution)) {
        	  rest.remove(added1);
@@ -178,7 +177,6 @@ public class UDG {
     return currentSolution;
   }
 	  
-
   // // // // // // // // // // // // CYCLES 
 
   public boolean cyclesExist() {
@@ -187,7 +185,7 @@ public class UDG {
 	while(!rest.isEmpty()) {
       Vertex newlyVisitedP = anyPointFromNeighborhoodOfVisited(visited,rest); 
       rest.remove(newlyVisitedP);
-      for (Vertex visitedP1 : visited.verices) 
+      for (Vertex visitedP1 : visited.vertices) 
         for (Vertex visitedP2 : sublistStartingAfterPoint(visitedP1,visited)) 
           if(isEdge(newlyVisitedP,visitedP1)&&isEdge(newlyVisitedP,visitedP2)) 
             return true;
@@ -196,37 +194,80 @@ public class UDG {
     return false;
   }
   
+/*  private UDG rotateFromNewPointToNewPoint(Vertex newPoint) {
+	UDG cycle = new UDG(); 
+    for(int i=this.vertices.size()-1; i>=0; i--) {
+      cycle.add(vertices.get(i));
+      if(vertices.get(i).equals(newPoint)) 
+    	break; /// ?
+    }
+    return cycle;
+  }*/
+
+  // // // // // // // // // // // // CYCLES 
+
   public ArrayList<UDG> elementaryCycles() { // DNS
-	UDG.cycles = new ArrayList<UDG>();
     markAllVertexWhite(); 
-    for (Vertex p : verices) 
-   	  calculateElementaryCyclesFromPath(new UDG(p));
-    return UDG.cycles;
+
+	ArrayList<UDG> allCycles = new ArrayList<UDG>();
+    for(Vertex p : vertices) 
+   	  allCycles.addAll(calculateElementaryCyclesFromPath(new UDG(p)));
+    for(UDG cycle : allCycles) // normalize cycles
+	  //cycle = cycle.rotateFromNewPointToNewPoint(newPoint);
+	  cycle.rotateAndMayBeInvertDirectionCycle();
+
+    ArrayList<UDG> cyclesWithouDuplicata = new ArrayList<UDG>();
+    for(UDG cycle1 : allCycles) {
+      boolean cycle1isUnique = true;
+      for(UDG cycle2 : allCycles) 
+  	    if(cycle1.equalsNormalizedCycle(cycle2)) {
+  	      cycle1isUnique=false;
+  	      break;
+  	    }
+      if(cycle1isUnique)	
+    	cyclesWithouDuplicata.add(cycle1);
+    }
+
+    return cyclesWithouDuplicata;
   }
 
-  public void calculateElementaryCyclesFromPath(UDG path) { 
+  public ArrayList<UDG> calculateElementaryCyclesFromPath(UDG path) { 
     Vertex lastPointPath = path.get(path.size()-1);
     lastPointPath.markDominatee(); // grey = points of the path = under verification
-	for(Vertex newPoint : this.neighborhoodWithoutCentralPoint(lastPointPath).verices) {
+    ArrayList<UDG> newlyComputedCycles = new ArrayList<UDG>(); 
+	for(Vertex newPoint : this.neighborhoodWithoutCentralPoint(lastPointPath).vertices) {
       if(newPoint.isNotExplored()) {
     	path.add(newPoint);
     	calculateElementaryCyclesFromPath(path);
 	  }
-	  else if(newPoint.isDominatee() && !newPoint.equals(path.get(path.size()-2))) {
-	    UDG cycle = path.sublistFromNewPointToNewPoint(newPoint);
-	    cycle.rotateAndMayBeInvertDirectionCycle();
-	    if(isNewCycle(cycle)) 
-	      UDG.cycles.add(cycle);
-	  }
+	  else if(newPoint.isWhite() && !newPoint.equals(path.get(path.size()-2))) 
+	    newlyComputedCycles.add(path); // duplicata possible
     }  
 	lastPointPath.markBlack();
+    return newlyComputedCycles;
+  }
+
+  public boolean equalsNormalizedCycle(UDG cycle2) {
+	if(this.size()!=cycle2.size()) 
+	  return false;
+    for(int i=0; i<this.size(); i++)
+	  if(!(this.get(i).x==cycle2.get(i).x && this.get(i).y==cycle2.get(i).y)) 
+	    return false;
+    return true;
+  }
+  
+  public static String cyclesToString(ArrayList<UDG> cycles) {
+    String toReturn = cycles.size()+" cycles:\n";
+	  for(UDG cycle : cycles) 
+   	    toReturn += cycle.toString()+"\n";
+    return toReturn;
   }
 
   // // // // // // // // // // // // // UTILS - CLONE
 
   public UDG clone() {
     // to serialize a lambda in Java 8 : possible, strongly discouraged, lambdas may not deserialize properly on another JRE ?
-	return new UDG(clone(this.verices)); 
+	return new UDG(clone(this.vertices)); 
   }
 
   public UDG clonePartExternalTo2(UDG g) {
@@ -237,7 +278,7 @@ public class UDG {
 
   public UDG partExternalTo(UDG g) { // not clone
     ArrayList<Vertex> extrenalPart = new ArrayList<Vertex>(); 
-    for(Vertex p : verices)
+    for(Vertex p : vertices)
       if(!g.contains(p))
     	extrenalPart.add(p);
     return new UDG(extrenalPart);
@@ -251,12 +292,12 @@ public class UDG {
   
   public UDG shuffledClone() { 
 	UDG clone = this.clone();
-    Collections.shuffle(clone.verices,new Random(System.nanoTime())); 
+    Collections.shuffle(clone.vertices,new Random(System.nanoTime())); 
     return clone;
   }
 
   public UDG cloneWithoutDuplicata() {
-	return new UDG(cloneWithoutDuplicata(this.verices));
+	return new UDG(cloneWithoutDuplicata(this.vertices));
   }	  
 
   public UDG shuffledCloneWithoutDuplicata() {
@@ -287,7 +328,7 @@ public class UDG {
   
   public UDG neighborhoodWithCentralPoint(Vertex p) { // not clone 
 	UDG neighborhood = new UDG();
-	for (Vertex candidat: this.verices) 
+	for (Vertex candidat: this.vertices) 
 	  if (candidat.distance(p)<UDG.edgeThreshold) 
         neighborhood.add(candidat);
 	return neighborhood; 
@@ -301,7 +342,7 @@ public class UDG {
 
   public UDG notExploredNeighborhoodWithoutCentralPoint(Vertex p) { // not clone 
 	UDG neighborhood = new UDG();
-	for (Vertex candidat: this.verices) 
+	for (Vertex candidat: this.vertices) 
 	  if (candidat.distance(p)<UDG.edgeThreshold && candidat.isNotExplored()) 
 	    neighborhood.add(candidat);
 	neighborhood.remove(p);
@@ -310,7 +351,7 @@ public class UDG {
 
   public UDG notExploredActiveNeighborhoodWithCentralPoint(Vertex p) { // not clone 
 	UDG neighborhood = new UDG();
-	for (Vertex candidat: this.verices)
+	for (Vertex candidat: this.vertices)
 	  if (candidat.distance(p)<UDG.edgeThreshold && candidat.isNotExplored() && candidat.active==true) 
 	    neighborhood.add(candidat);
 	return neighborhood; 
@@ -319,7 +360,7 @@ public class UDG {
   public UDG blackNeighborhoodWithoutCentralPoint(Vertex p) { // not clone 
     UDG neighborhood = new UDG();
     // System.out.println("  @ find black neighborhood of "+p.toString()+" in "+this.vertex.toString());
-    for (Vertex candidat: this.verices) 
+    for (Vertex candidat: this.vertices) 
 	  if (candidat.distance(p)<UDG.edgeThreshold && candidat.isBlack()) 
 	    neighborhood.add(candidat);
 	neighborhood.remove(p);
@@ -327,20 +368,20 @@ public class UDG {
   }
   public UDG neighborhoodWithInitialPoints(UDG initialPoints) { // not clone 
 	HashSet<Vertex> pointsToAdd = new HashSet<Vertex>(); 
-	for(Vertex p : initialPoints.verices)
-	  pointsToAdd.addAll(this.neighborhoodWithCentralPoint(p).verices);
+	for(Vertex p : initialPoints.vertices)
+	  pointsToAdd.addAll(this.neighborhoodWithCentralPoint(p).vertices);
 	initialPoints.addAll(new ArrayList<Vertex>(pointsToAdd));
 	return initialPoints; 
   }
 
   public UDG blackNeighborhoodWithoutInitialPoints(UDG initialPoints) { // not clone 
-    return new UDG(blackNeighborhoodWithoutInitialPoints(new HashSet<Vertex>(initialPoints.verices)));
+    return new UDG(blackNeighborhoodWithoutInitialPoints(new HashSet<Vertex>(initialPoints.vertices)));
   }
 	  
   public HashSet<Vertex> blackNeighborhoodWithoutInitialPoints(HashSet<Vertex> initialPoints) { // not clone 
 	HashSet<Vertex> blackNeighborhood = new HashSet<Vertex>(); 
 	for(Vertex initialPoint : initialPoints) 
-	  for(Vertex pointCandidat : this.blackNeighborhoodWithoutCentralPoint(initialPoint).verices) 
+	  for(Vertex pointCandidat : this.blackNeighborhoodWithoutCentralPoint(initialPoint).vertices) 
 		if(!initialPoints.contains(pointCandidat)) 
 		  blackNeighborhood.add(pointCandidat);
 	return blackNeighborhood; 
@@ -358,7 +399,7 @@ public class UDG {
   
   public UDG whiteVertex() {
 	UDG white = new UDG();
-	for(Vertex p : verices)
+	for(Vertex p : vertices)
 	  if(p.isWhite())
 		white.add(p); 
 	return white;
@@ -366,19 +407,19 @@ public class UDG {
 
   public UDG greyVertex() {
 	UDG grey = new UDG();
-	for(Vertex p : verices)
+	for(Vertex p : vertices)
 	  if(p.isGrey())
 		grey.add(p); 
 	return grey;
   }
 
-  public UDG dominatorsVertex() {
+  public UDG dominatorsVertex() { /// vertices
 	return blackVertex();
   }
   
   public UDG blackVertex() {
 	UDG black = new UDG();
-	for(Vertex p : verices)
+	for(Vertex p : vertices)
 	  if(p.isBlack())
 		black.add(p); 
 	return black;
@@ -386,7 +427,7 @@ public class UDG {
 
   public UDG blackAndBlueVertex() {
 	UDG blackAndBlueVertex = new UDG();
-	for(Vertex p : verices)
+	for(Vertex p : vertices)
 	  if(p.isBlack() || p.isBlue())
 		blackAndBlueVertex.add(p); 
 	return blackAndBlueVertex;
@@ -394,22 +435,12 @@ public class UDG {
 
   public UDG notExploredActiveVertex() {
     UDG whiteActiveVertex = new UDG();
-    for(Vertex p : this.verices)
+    for(Vertex p : this.vertices)
       if(p.isNotExploredActive())
     	whiteActiveVertex.add(p);
     return whiteActiveVertex;
   }
 	  
-  private UDG sublistFromNewPointToNewPoint(Vertex newPoint) {
-	UDG cycle = new UDG(); 
-    for(int i=this.verices.size()-1; i>=0; i--) { 
-      cycle.add(verices.get(i));
-      if(verices.get(i).equals(newPoint)) 
-    	break; /// ?
-    }
-    return cycle;
-  }
-
   public Map<Vertex,UDG> blackComponents() { // not clone
 	Map<Vertex,UDG> mapBlackComponents = new HashMap<Vertex, UDG>(); 
     UDG rest = this.blackVertex().clone();
@@ -438,7 +469,7 @@ public class UDG {
 	component.add(p0);
 	while(true) {
 	  HashSet<Vertex> toAdd = new HashSet<Vertex>();
-      for(Vertex candidat : this.partExternalTo(new UDG(component)).verices)
+      for(Vertex candidat : this.partExternalTo(new UDG(component)).vertices)
 	    for(Vertex pointComponent : component)
 		  if(isEdge(candidat,pointComponent))
 		    toAdd.add(candidat);
@@ -456,30 +487,30 @@ public class UDG {
   // // // // // // // // // // // // // UTILS
 
   public Vertex barycenter() {
-    if(verices.size()==0) 
+    if(vertices.size()==0) 
 	  return null; 
     int summeOfX=0, summeOfY=0;
-    for(Vertex p : this.verices) { /// stream ?
+    for(Vertex p : this.vertices) { /// stream ?
 	  summeOfX+=p.x;  
 	  summeOfY+=p.y;  
     }
-    return new Vertex(summeOfX/verices.size(),summeOfY/verices.size());
+    return new Vertex(summeOfX/vertices.size(),summeOfY/vertices.size());
   }
 
   public boolean deplacingCentreToBarycenterHasMadeChanges() { /// tmp
-	if(this.verices.size()==0)
+	if(this.vertices.size()==0)
 	  return false;
 	Vertex barycenter=barycenter();
-    if(barycenter.x==center.x && barycenter.y==center.y ) // compare as objects ?
-      return false;
-   	this.center = barycenter;
+    ///if(barycenter.x==center.x && barycenter.y==center.y ) // compare as objects ?
+      ///return false;
+   	///this.center = barycenter;
 	  //System.out.println("new center = barycenter = "+barycenter);
    	return true;
   }
 
   public boolean distanceExactlyTwoHops(Vertex p1, Vertex p2) {
     if(isEdge(p1,p2)) return false;
-    for(Vertex p : this.verices)
+    for(Vertex p : this.vertices)
       if(isEdge(p,p1) && isEdge(p,p2)) return true;
     return false;
   }
@@ -488,10 +519,10 @@ public class UDG {
 	//  propriety of lemma 2 "On greedy construction of CDS in wireless networks" Yingshu Thai Wang Yi Wan Du 
     if(misWithPropriety.contains(candidat)) // ?
       return true; 
-	for(Vertex pointMis: misWithPropriety.verices) 
+	for(Vertex pointMis: misWithPropriety.vertices) 
       if(isEdge(candidat,pointMis) || candidat.equals(pointMis))
         return false;
-    for(Vertex pointMis: misWithPropriety.verices) 
+    for(Vertex pointMis: misWithPropriety.vertices) 
       if(distanceExactlyTwoHops(candidat,pointMis))
     	return true;
 	return false;
@@ -517,8 +548,8 @@ public class UDG {
   }
 
   public boolean hasAsMis(UDG misToVerify) { // with or without propriety "2 hops distance"
-    for(Vertex p : this.partExternalTo(misToVerify).clone().verices) 
-      if(new UDG(misToVerify.clone().verices,p).isIndependentSet()) // optimisation possible - verify only p ?
+    for(Vertex p : this.partExternalTo(misToVerify).clone().vertices) 
+      if(new UDG(misToVerify.clone().vertices,p).isIndependentSet()) // optimisation possible - verify only p ?
         return false;
 	return true;
   }
@@ -541,9 +572,9 @@ public class UDG {
   
   public boolean hasAsDS(UDG dsToVerify) { 
 	if(dsToVerify.isEmpty()) return false;
-    for(Vertex p : verices) {
+    for(Vertex p : vertices) {
       boolean pointIsVisited=false;
-      for(Vertex pDs : dsToVerify.verices)  
+      for(Vertex pDs : dsToVerify.vertices)  
 	    if (isEdgeOrEqualPoints(p,pDs)) 
 	      pointIsVisited=true;
       if(!pointIsVisited)
@@ -557,29 +588,29 @@ public class UDG {
   }
   
   public Vertex anyNotExploredActiveVertex() { 
-	for(Vertex p : verices)
+	for(Vertex p : vertices)
 	  if(p.isWhite() && p.active==true)
 		return p;
     return null;
   }
   
   public Vertex anyWhiteVertex() {
-	for(Vertex p : verices)
+	for(Vertex p : vertices)
 	  if(p.isWhite())
 		return p;
     return null;
   }
   
   public Vertex anyGreyVertex() {
-	for(Vertex p : verices)
+	for(Vertex p : vertices)
 	  if(p.isGrey())
 		return p;
     return null;
   }
   
   public Vertex vertexHighest_dAsterix_id() {
-	Vertex vertexHighest_dAsterix_id=verices.get(0);
-	for(Vertex candidat : verices)
+	Vertex vertexHighest_dAsterix_id=vertices.get(0);
+	for(Vertex candidat : vertices)
 	  if(   candidat.countEffectiveDegree(this)> vertexHighest_dAsterix_id.countEffectiveDegree(this) 
 	    || (candidat.countEffectiveDegree(this)==vertexHighest_dAsterix_id.countEffectiveDegree(this) 
 	        &&
@@ -589,18 +620,18 @@ public class UDG {
   }
   
   private static ArrayList<Vertex> sublistStartingAfterPoint(Vertex p, UDG g) {
-    return new ArrayList<Vertex>(g.verices.subList(g.verices.indexOf(p)+1,g.verices.size()));
+    return new ArrayList<Vertex>(g.vertices.subList(g.vertices.indexOf(p)+1,g.vertices.size()));
   }
 	  
   private void rotateAndMayBeInvertDirectionCycle() { // start with left top point 
-	ArrayList<Vertex> normalizedPath = clone(this.verices);
+	ArrayList<Vertex> normalizedPath = clone(this.vertices);
 	Vertex leftTopPoint = this.leftTopPoint();
 	while (normalizedPath.get(0) != leftTopPoint) {
 	  Vertex toDeplace = normalizedPath.get(0);
 	  normalizedPath.remove(toDeplace);
 	  normalizedPath.add(toDeplace);
 	}
-    this.verices = normalizedPath;
+    this.vertices = normalizedPath;
 
     Vertex secondPoint = normalizedPath.get(1);
 	Vertex lastPoint   = normalizedPath.get(normalizedPath.size()-1);
@@ -610,38 +641,23 @@ public class UDG {
 
   private void invertDirectionCycle() { 
     UDG invertedPoints = new UDG();
-    invertedPoints.add(this.verices.get(0));
-	for (int i=this.verices.size()-1; i>=1; i--)
-	  invertedPoints.add(verices.get(i));
-	this.verices = invertedPoints.verices;
+    invertedPoints.add(this.vertices.get(0));
+	for (int i=this.vertices.size()-1; i>=1; i--)
+	  invertedPoints.add(vertices.get(i));
+	this.vertices = invertedPoints.vertices;
   }
 
   private Vertex leftTopPoint() {
-    Vertex leftTopPoint = this.verices.get(0);
-	for (Vertex p : this.verices)
+    Vertex leftTopPoint = this.vertices.get(0);
+	for (Vertex p : this.vertices)
 	  if ( p.x<leftTopPoint.x || (p.x==leftTopPoint.x && p.y<leftTopPoint.y) )
 		leftTopPoint = p;
 	return leftTopPoint;
   }
 
-  public static boolean isNewCycle(UDG cycleToVerify) {
-	for(UDG cycle : UDG.cycles)
-	  if(cycle.equalsNormalizedCycle(cycleToVerify)) return false;
-	return true;
-  }
-  
-  public boolean equalsNormalizedCycle(UDG cycle2) {
-	if(this.size()!=cycle2.size()) 
-	  return false;
-    for(int i=0; i<this.size(); i++)
-	  if(!(this.get(i).x==cycle2.get(i).x && this.get(i).y==cycle2.get(i).y)) 
-	    return false;
-    return true;
-  }
-  
   public boolean everyPointMayBeExceptOneHasDegreeTwo() {
     boolean weHaveAlreadySeeDegreeNoEqualsToTwo=false;
-	for(Vertex p : this.verices){
+	for(Vertex p : this.vertices){
       if(p.getDegree(this)!=2) {
         if(weHaveAlreadySeeDegreeNoEqualsToTwo) 
   	      return false;
@@ -661,9 +677,9 @@ public class UDG {
   }
   
   public Vertex theMostConnectedPoint() {
-    if(verices.size()==0) return null;
-    Vertex theMostConnectedPoint=verices.get(0);
-    for (Vertex p: verices) 
+    if(vertices.size()==0) return null;
+    Vertex theMostConnectedPoint=vertices.get(0);
+    for (Vertex p: vertices) 
       if (p.getDegree(this)>theMostConnectedPoint.getDegree(this)) 
         theMostConnectedPoint=p;
     return theMostConnectedPoint;
@@ -678,117 +694,117 @@ public class UDG {
   }
   
   public Vertex get(int n) {
-	if(n>=this.verices.size() || n<0) return null;
-	return this.verices.get(n);
+	if(n>=this.vertices.size() || n<0) return null;
+	return this.vertices.get(n);
   }
   
   public void markAllVertexWhite() {
-    for(Vertex p : this.verices) 
+    for(Vertex p : this.vertices) 
   	  p.color = Color.WHITE;
   }
 
   public void markAllVertexBlack() {
-    for(Vertex p : this.verices) 
+    for(Vertex p : this.vertices) 
   	  p.color = Color.BLACK;
   }
 
   public void markVertexBlack(UDG subG) {
-    for(Vertex p : this.verices)
-      for(Vertex q : subG.verices) 
+    for(Vertex p : this.vertices)
+      for(Vertex q : subG.vertices) 
   	    if(p.equals(q))
   	      p.color = Color.BLACK;
   }
 
   public void markAllVertexGrey() {
-    for(Vertex p : this.verices) 
+    for(Vertex p : this.vertices) 
   	  p.color = Color.GREY;
   }
 
   public int nbPointsOfColor(Color color) {
 	int nb=0;
-    for (Vertex p : this.verices)
+    for (Vertex p : this.vertices)
       if(p.color.equals(color))
     	nb++;
     return nb;
   }
 	  
   public void add(Vertex p) {
-	this.verices.add(p);
+	this.vertices.add(p);
   }
 
   public void add(int n, Vertex p) {
-	verices.add(n,p);
+	vertices.add(n,p);
   }
   
   public void add(UDG g) {
-	verices.addAll(g.verices);
+	vertices.addAll(g.vertices);
   }
   
   public void addAll(ArrayList<Vertex> pp) {
-	verices.addAll(pp);
+	vertices.addAll(pp);
   }
 
   public Vertex remove(int n) {
-	if(n>=verices.size()) return null;
-	return verices.remove(n); 
+	if(n>=vertices.size()) return null;
+	return vertices.remove(n); 
   }
 
   public boolean remove(Vertex toRemove) {
-	return verices.remove(toRemove);
+	return vertices.remove(toRemove);
   }
 
   public boolean remove(ArrayList<Vertex> toRemove) {
-	return verices.removeAll(toRemove);
+	return vertices.removeAll(toRemove);
   }
 
   public boolean removeAll(UDG g) {
-	ArrayList<Vertex> toRemove = g.clone().verices;
-	return verices.removeAll(toRemove);
+	ArrayList<Vertex> toRemove = g.clone().vertices;
+	return vertices.removeAll(toRemove);
   }
 
   public int indexOf(Vertex p) {
-	return this.verices.indexOf(p);  
+	return this.vertices.indexOf(p);  
   }
   
   public boolean removePointAndItsNeigborhood(Vertex p) {
-	ArrayList<Vertex> toRemove = this.neighborhoodWithCentralPoint(p).clone().verices;
-	return verices.removeAll(toRemove);
+	ArrayList<Vertex> toRemove = this.neighborhoodWithCentralPoint(p).clone().vertices;
+	return vertices.removeAll(toRemove);
   }
  
   public boolean contains(Vertex p) {
-	return verices.contains(p);
+	return vertices.contains(p);
   }
   
   public int size() {
-	return verices.size();
+	return vertices.size();
   }
   
   public int length() {
-	return verices.size();
+	return vertices.size();
   }
   
   public boolean isEmpty() {
-	return verices.size()==0;
+	return vertices.size()==0;
   }
   
   public boolean isNotEmpty() {
-	return verices.size()!=0;
+	return vertices.size()!=0;
   }
   
   public void clear() {
-	verices.clear();
+	vertices.clear();
   }
 
   public ArrayList<Point> getSolutionAsPoints() {
 	ArrayList<Point> toReturn = new ArrayList<Point>();
-	for(Vertex p : verices)
+	for(Vertex p : vertices)
 	  toReturn.add(new Point(p.x,p.y));
 	return toReturn;
   }
 
   public ArrayList<Point> convertToPoints() {
 	ArrayList<Point> points = new ArrayList<Point>();
-	for(Vertex p : this.verices)
+	for(Vertex p : this.vertices)
 	  points.add(new Point(p.x,p.y));
 	return points;
   }
@@ -797,31 +813,31 @@ public class UDG {
 	return !p1.equals(p2) && p1.distance(p2) < edgeThreshold; /// p1==p2 ?
   }
   
-  public ArrayList<Edge> edges() {
+/*  public ArrayList<Edge> edges() {
     ArrayList<Edge> edges = new ArrayList<Edge>();
 	for(int i=0; i<this.size(); i++) {
-	  Vertex p1 = verices.get(i);
+	  Vertex p1 = vertices.get(i);
 	  for(int j=i+1; j<this.size(); j++) {
-	    Vertex p2 = verices.get(j);
+	    Vertex p2 = vertices.get(j);
 	    if(isEdgeNotEqualPoints(p1,p2))
 	      edges.add(new Edge(p1,p2));
 	  }
 	}
 	return edges;
-  }
+  }*/
   
-  public ArrayList<Edge> allEdgesContaining(Vertex p) {
+/*  public ArrayList<Edge> allEdgesContaining(Vertex p) {
     ArrayList<Edge> edgesContainingPoint = new ArrayList<Edge>();
 	for(Edge edge : this.edges())
 	  if(edge.contains(p))
   	    edgesContainingPoint.add(edge);
     return edgesContainingPoint;
-  }
+  }*/
 
   public String toString() {
     if(this.size()==0) return " vide";
 	String toReturn=" "+this.size()+":";
-    for(Vertex p : verices)
+    for(Vertex p : vertices)
       if(p!=null)
     	toReturn += "["+p.x+","+p.y+"]";
       else
@@ -832,35 +848,21 @@ public class UDG {
   public String toStringWithColorsDegrees() {
     if(this.size()==0) return " vide";
     String toReturn=this.size()+" vertex: ";
-    for(Vertex p : verices) 
+    for(Vertex p : vertices) 
       if(p==null) toReturn += "[null]";
       else        toReturn += p.toString();
 	return toReturn;
   }
   
-  public static String cyclesToString() {
-    String toReturn=UDG.cycles.size()+" cycles:\n";
-	  for(UDG cycle : UDG.cycles) 
-   	    toReturn += cycle.toString()+"\n";
-    return toReturn;
-  }
-
   public void cleanup() { // enleve les points à degrée<=1
 	ArrayList<Vertex> toRemove = new ArrayList<Vertex>();
-	for(Vertex p : this.verices)
+	for(Vertex p : this.vertices)
 	  if(p.getDegree(this)>1)
 		toRemove.add(p);
-	this.verices.removeAll(toRemove);
+	this.vertices.removeAll(toRemove);
   }
   
   public int score() {
 	return this.size();
-  }
-  
-  public UDG allCycles() { // for debugging 
-    UDG allCycles = this.clone();
-    for(UDG cycle : cycles) 
-   	  allCycles.removeAll(cycle);
-    return allCycles;
   }
 }  
