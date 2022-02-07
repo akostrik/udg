@@ -8,7 +8,7 @@ The k-means clustering problem consists of computing a partition of S into k par
   - Algo de l'article "k-means++: The advantages of careful seeding" by Arthur, Vassilvitskii - soon
 
 ## FVS, Feedback Vertex Set
-*Feedback Vertex Set*: Given a graph G = (V, E), the minimum Feedback Vertex Set (MinFVS) problem consists in computing a minimum sized subset of vertices F ⊆ V such that the subgraph G[V \ F ] induced by V \ F in G is cycleless, that is, G[V \ F ] is a forest.
+Given a graph G = (V, E), *Feedback Vertex Set* is a minimum sized subset of vertices F ⊆ V such that the subgraph G[V \ F] induced by V \ F in G is cycleless.
   - Greedy
   - Optimisation by Local Search 
   - Algo de l'article "A 2-approximation algorithm for the undirected feedback vertex set problem" by Bafna, Berman, Fujito (1999) - soon
