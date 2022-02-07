@@ -1,4 +1,8 @@
-Sorbonne University, DAAR (Développement des Algorithmes d’Application Réticulaire), Master Informatics 2021/2022 
+Sorbonne University
+
+Master Informatics 
+
+DAAR (Développement des Algorithmes d’Application Réticulaire)
 
 # UDG, Unit Disk Graph with Algos
 *UDP*, *Geometric graph* G=(V,E) in a 2D plane: a set of points in the plane called vertices, and a threshold on the distance between the points : there is an edge between two vertices if and only if the Euclidean distance between the two vertices is smaller than this threshold.
