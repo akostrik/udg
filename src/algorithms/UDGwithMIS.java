@@ -18,13 +18,15 @@ public class UDGwithMIS extends UDG { // maximal independent set
 
   public UDGwithMIS(ArrayList<Vertex> vertex) { 
     super(vertex);
-    this.isSolution                = (solutionCandidat)                -> { return hasAsMisWithPropriety(solutionCandidat); }; // isMis for other goals
-    this.shouldTryToReplace2Points = (Vertex p1, Vertex p2)            -> { return true; }; 
-    this.shouldTryToReplace3Points = (Vertex p1, Vertex p2, Vertex p3) -> { return true; };
+    this.isSolution                = (solutionCandidat)     -> { return hasAsMisWithPropriety(solutionCandidat); }; // isMis for other goals
+    this.shouldTryToReplace2Points = (Vertex p1, Vertex p2) -> { return p1.distance(p2)<4*edgeThreshold; }; /// ?
+    this.shouldTryToReplace3Points = (Vertex p1, Vertex p2, Vertex p3)-> { /// ?
+      return  (p1.distance(p2)<4*edgeThreshold  && p2.distance(p3)<4*edgeThreshold) && (p3.distance(p1)<4*edgeThreshold);
+    }; 
   }
 
   public UDG misWithProperty() { 
-	// "distance 2 hops" => suits for CDS "On greedy construction of CDS in wireless networks" Yingshu Thai Wang Yi Wan Du 
+	// "distance 2 hops" => suits for CDS as in "On greedy construction of CDS in wireless networks" by Yingshu et al
     if(!this.isConnected()) {
       System.out.println("input UPD must be connected ");
       return new UDG();

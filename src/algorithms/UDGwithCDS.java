@@ -12,20 +12,21 @@ public class UDGwithCDS extends UDG { // connected dominating set
   public UDGwithCDS(ArrayList<Vertex> vertex) {
     super(vertex);
     this.isSolution                = (solutionCandidat)     -> { return this.hasAsCDS(solutionCandidat); };
-    this.shouldTryToReplace2Points = (Vertex p1, Vertex p2) -> { return p1.distance(p2)<4*edgeThreshold; }; 
-
+    this.shouldTryToReplace2Points = (Vertex p1, Vertex p2) -> { return p1.distance(p2)<4*edgeThreshold; }; /// ?
     this.shouldTryToReplace3Points = (Vertex p1, Vertex p2, Vertex p3)-> { /// ?
-      return    (p1.distance(p2)<4*edgeThreshold  && p2.distance(p3)<4*edgeThreshold) 
-    	     || (p2.distance(p3)<4*edgeThreshold  && p3.distance(p1)<4*edgeThreshold) 
-    	     ||	(p3.distance(p1)<4*edgeThreshold  && p1.distance(p2)<4*edgeThreshold); 
+      return  (p1.distance(p2)<4*edgeThreshold  && p2.distance(p3)<4*edgeThreshold) && (p3.distance(p1)<4*edgeThreshold); 
     }; 
   }
 
   public UDG cds() { 
 	UDG cds=cdsAlgoArticle(); 
-	cds = this.tryToReplace2by1(cds); // rather long
+
+    // cds = this.tryToReplace2by1(cds); // long
+    cds = repeatWhileCanDoBetter(cds,this.tryToReplace2by1); // long
+
 	cds = this.tryToRemovePoints(cds); 
-    return cds;	
+	// (mis - replace2by1) - > greedy - repeat replace2by1 -> 132
+     return cds;	
   }
   
   private UDG cdsAlgoArticle() { // "On greedy construction of CDS in wireless networks" Yingshu Thai Wang Yi Wan Du 
