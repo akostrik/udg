@@ -15,19 +15,19 @@ The *k-means clustering* is a partition of S into k parties in such a way that t
 *Feedback Vertex Set* is a minimum sized subset of vertices F ⊆ V such that the subgraph G[V\F] induced by V\F in G is cycleless.
   - Greedy
   - Optimisation by Local Search 
-  - Algo de l'article "A 2-approximation algorithm for the undirected feedback vertex set problem" by Bafna, Berman, Fujito (1999) - soon
+  - Algo de l'article "A 2-approximation algorithm for the undirected feedback vertex set problem" by Bafna, Berman, Fujito - soon
 
 ## MIS, Maximal Independent Set
 *Maximal Independent Set* is a subset of vertices I⊆V such that the subgraph G[I] induced by I is edgeless, and such that the subset I is maximal by inclusion.
   - Algo naiv
-  - Non-distribied version of the algo MIS (MIS with property of 2-hops distance) of the article "Connected Domination in Multihop Ad Hoc Wireless Networks" by Cardei, Cheng, Cheng, Du (2002)
+  - Non-distribied version of the algo MIS of the article "Connected Domination in Multihop Ad Hoc Wireless Networks" by Cardei, Cheng, Cheng, Du 
 
 ## DS, Dominating Set
 *Minimum Dominating Set* is a minimum sized subset of vertices D⊆V such that every vertex v∈V either belong to D or is a neighbour
 of a vertex in D.
   - Greedy
   - Optimisation by Local Search 
-  - Optimisation of the article "A PTAS for the minimum domimation set problem in unit disk graphs" by Nieberg, Hurink (2008) - soon
+  - Optimisation of the article "A PTAS for the minimum domimation set problem in unit disk graphs" by Nieberg, Hurink - soon
 
 ## CDS, Conected Domitating Set
 *Ninimum Connected Dominating Set* is a minimum sized subset of vertices D⊆V such that every vertex v∈V either belong to D or is a neighbour of a vertex in D, and such that the subgraph G[D] induced by D is connected.
