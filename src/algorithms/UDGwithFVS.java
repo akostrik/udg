@@ -23,7 +23,7 @@ public class UDGwithFVS extends UDG { // feedback vertex set
     // this.solution = repeatWhileCanDoBetter((UDP)this,this.tryToReplace2by1s); // too long
     // this.solution = tryToReplace3by2((UDP)this); // too long, 50 points -> 13, 13, 13, 13, 13
 
-    ArrayList<UDG> cycles = elementaryCycles();
+    // ArrayList<UDG> cycles = elementaryCycles();
     //allCycles();
 	//System.out.println("cycles : "+this.cyclesToString());
     return fvs;	  

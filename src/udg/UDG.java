@@ -233,7 +233,7 @@ public class UDG {
 
   public ArrayList<UDG> calculateElementaryCyclesFromPath(UDG path) { 
     Vertex lastPointPath = path.get(path.size()-1);
-    lastPointPath.markDominatee(); // grey = points of the path = under verification
+    lastPointPath.markGrey(); // grey = points of the path = under verification
     ArrayList<UDG> newlyComputedCycles = new ArrayList<UDG>(); 
 	for(Vertex newPoint : this.neighborhoodWithoutCentralPoint(lastPointPath).vertices) {
       if(newPoint.isNotExplored()) {
@@ -647,7 +647,7 @@ public class UDG {
 	this.vertices = invertedPoints.vertices;
   }
 
-  private Vertex leftTopPoint() {
+  private Vertex leftTopPoint() { /// comparator
     Vertex leftTopPoint = this.vertices.get(0);
 	for (Vertex p : this.vertices)
 	  if ( p.x<leftTopPoint.x || (p.x==leftTopPoint.x && p.y<leftTopPoint.y) )

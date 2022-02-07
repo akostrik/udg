@@ -11,16 +11,20 @@ public class UDGwithCDS extends UDG { // connected dominating set
 	
   public UDGwithCDS(ArrayList<Vertex> vertex) {
     super(vertex);
-    this.isSolution                  = (solutionCandidat)                -> { return this.hasAsCDS(solutionCandidat); };
-    this.shouldTryToReplace2Points   = (Vertex p1, Vertex p2)            -> { return true; }; 
-    this.shouldTryToReplace3Points = (Vertex p1, Vertex p2, Vertex p3) -> { return true; };
+    this.isSolution                = (solutionCandidat)     -> { return this.hasAsCDS(solutionCandidat); };
+    this.shouldTryToReplace2Points = (Vertex p1, Vertex p2) -> { return p1.distance(p2)<4*edgeThreshold; }; 
+
+    this.shouldTryToReplace3Points = (Vertex p1, Vertex p2, Vertex p3)-> { /// ?
+      return    (p1.distance(p2)<4*edgeThreshold  && p2.distance(p3)<4*edgeThreshold) 
+    	     || (p2.distance(p3)<4*edgeThreshold  && p3.distance(p1)<4*edgeThreshold) 
+    	     ||	(p3.distance(p1)<4*edgeThreshold  && p1.distance(p2)<4*edgeThreshold); 
+    }; 
   }
 
   public UDG cds() { 
 	UDG cds=cdsAlgoArticle(); 
+	cds = this.tryToReplace2by1(cds); // rather long
 	cds = this.tryToRemovePoints(cds); 
-	// cds = this.tryToReplace2by1(cds); // too long
-	System.out.println(" cds = "+cds.toStringWithColorsDegrees());
     return cds;	
   }
   

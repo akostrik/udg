@@ -18,8 +18,8 @@ public class UDGwithMIS extends UDG { // maximal independent set
 
   public UDGwithMIS(ArrayList<Vertex> vertex) { 
     super(vertex);
-    this.isSolution                  = (solutionCandidat)                -> { return hasAsMisWithPropriety(solutionCandidat); }; // isMis for other goals
-    this.shouldTryToReplace2Points   = (Vertex p1, Vertex p2)            -> { return true; }; 
+    this.isSolution                = (solutionCandidat)                -> { return hasAsMisWithPropriety(solutionCandidat); }; // isMis for other goals
+    this.shouldTryToReplace2Points = (Vertex p1, Vertex p2)            -> { return true; }; 
     this.shouldTryToReplace3Points = (Vertex p1, Vertex p2, Vertex p3) -> { return true; };
   }
 
@@ -43,13 +43,13 @@ public class UDGwithMIS extends UDG { // maximal independent set
   	  }
     } 
     
-    UDG mis=this.blackVertex(); // dominator black, dominatee grey
-	// mis=tryToReplace2by1(mis); too long
-    return mis; 
+    UDG misWithProperty=this.dominatorsVertex(); 
+	misWithProperty=tryToReplace2by1(misWithProperty); // too long
+    return misWithProperty; 
   }  
 
   private Vertex newDominators() { // elections from White Active
-	if(this.blackVertex().size()==0) // the first dominator
+	if(this.dominatorsVertex().size()==0) // the first dominator
 	  return this.theMostConnectedPoint();  
     Vertex activeWhite=anyNotExploredActiveVertex();
     return this.notExploredActiveNeighborhoodWithCentralPoint(activeWhite).vertexHighest_dAsterix_id();

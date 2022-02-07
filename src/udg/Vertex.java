@@ -6,11 +6,9 @@ import java.util.Map;
 
 import algorithms.UDGwithMIS;
 
-public class Vertex extends Point {
+public class Vertex extends Point implements Comparable<Vertex> {
   public Color   color;
-  public boolean active;                         // for algo MIS
-  public Vertex  dominator;                      // for algo MIS
-  public boolean hasBroadcastedToBlackNeighbors; // for algo MIS
+  public boolean active; // for algo MIS
 
   public Vertex(int x, int y) {
     super(x,y);
@@ -24,11 +22,34 @@ public class Vertex extends Point {
     this.active = active;
   }*/
   
-  public int countEffectiveDegree(UDG g) {
+  @Override
+  public int compareTo(Vertex other) { /// no duplicata of points ?
+    // System.identityHashCode = id hashcode of the objet, int, 0 if object=null
+
+	// this > other
+	if(this.x>other.x) 
+	  return 1;
+    if(this.x==other.x && this.y>other.y) 
+	  return 1;
+    if(this.x==other.x && this.y==other.y && System.identityHashCode(this)>System.identityHashCode(other) ) 
+	  return 1;
+    		
+    // this < other
+    if(this.x<other.x) 
+	  return -1;
+    if(this.x==other.x && this.y<other.y) 
+	  return -1;
+    if(this.x==other.x && this.y==other.y && System.identityHashCode(this)<System.identityHashCode(other) ) 
+	  return -1;
+	
+    return 0;
+  }
+
+  public int countEffectiveDegree(UDG g) {  // for MIS
 	return g.notExploredNeighborhoodWithoutCentralPoint(this).size();
   }
 
-  public int getDegree(UDG g) {
+  public int getDegree(UDG g) { /// нужно?
 	return g.neighborhoodWithoutCentralPoint(this).size();
   }
 
@@ -94,15 +115,16 @@ public class Vertex extends Point {
 	return (this.color.equals(Color.WHITE) && this.active);  
   }
 
-  //////////////////// UTILS
+  // // // // // // // // //// UTILS
 
   public Vertex clone() {
-	return new Vertex(this.x,this.y,this.color,this.active);
+	///return new Vertex(this.x,this.y,this.color,this.active);
+	return new Vertex(this.x,this.y);
   }
   
-  public boolean equals(Vertex other) {
-	return this.x==other.x&&this.y==other.y&&this.color==other.color&&this.active==other.active&&this.dominator==other.dominator;
-  }
+/*  public boolean equals(Vertex other) {
+	return this.x==other.x&&this.y==other.y&&this.color==other.color&&this.active==other.active;
+  }*/
 
   public static ArrayList<Vertex> convertToVertex(ArrayList<Point> points) {
 	ArrayList<Vertex> toReturn = new ArrayList<Vertex>();
@@ -114,9 +136,9 @@ public class Vertex extends Point {
   public String toString() {
     String toReturn = "["+this.x+" "+this.y+" ";
  	if     (this.isNotExploredActive()) toReturn += "aw";
-    else if(this.isNotExplored())          toReturn += "w";
-    else if(this.isDominatee ())          toReturn += "g";
-    else if(this.isDominator())          toReturn += "b";
+    else if(this.isNotExplored())       toReturn += "w";
+    else if(this.isDominatee ())        toReturn += "g";
+    else if(this.isDominator())         toReturn += "b";
 	return toReturn+"]";
   }
 }
