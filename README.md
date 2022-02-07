@@ -15,7 +15,6 @@ The *k-means clustering* is a partition of S into k parties in such a way that t
 
 ## MIS, Maximal Independent Set
 *Maximal Independent Set* is a subset of vertices I⊆V such that the subgraph G[I] induced by I is edgeless, and such that the subset I is maximal by inclusion.
-Remark : A maximal independent set is a dominating
   - Algo naiv
   - Non-distribied version of the algo MIS (MIS with property of 2-hops distance) of the article "Connected Domination in Multihop Ad Hoc Wireless Networks" by Cardei, Cheng, Cheng, Du (2002)
 
