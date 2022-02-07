@@ -5,6 +5,6 @@ import java.lang.FunctionalInterface;
 import udg.UDG;
 @FunctionalInterface
 
-public interface AlgoImprove1stSolution extends Serializable {
+public interface AlgoImproveSolution extends Serializable {
   UDG method(UDG firstSolution); 
 }

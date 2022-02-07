@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 import functionalInterfaces.IsSolution;
-import functionalInterfaces.AlgoImprove1stSolution;
+import functionalInterfaces.AlgoImproveSolution;
 import functionalInterfaces.Algo;
 import functionalInterfaces.WillTryToReplace2Points;
 import functionalInterfaces.WillTryToReplace3Points;
@@ -17,13 +17,11 @@ import java.awt.Point;
 public class UDG {
   public ArrayList<Vertex>             vertex                       = null; // initialisation in the constructor
   public static int                    edgeThreshold;                       // the only init., here ? in the calling class ?
-  public static int                    K;                                   // for algo kmeans
-  public Vertex                        center                       = null; // for algo kmeans, center = mean point
   public static ArrayList<UDG>         cycles;                              
   public Map<Vertex,UDG>               mapBlackBlueComponents       = null;
-  public AlgoImprove1stSolution        tryToRemovePoints            = null; // initialisation in the constructor
-  public AlgoImprove1stSolution        tryToReplace2by1             = null; // initialisation in the constructor
-  public AlgoImprove1stSolution        tryToReplace3by2             = null; // initialisation in the constructor
+  public AlgoImproveSolution           tryToRemovePoints            = null; // initialisation in the constructor
+  public AlgoImproveSolution           tryToReplace2by1             = null; // initialisation in the constructor
+  public AlgoImproveSolution           tryToReplace3by2             = null; // initialisation in the constructor
   public Algo                          greedyAlgo                   = null; // initialisation in the constructor
   public WillTryToReplace2Points       willTryToReplace2Points      = null; // initialisation in sub-classes
   public WillTryToReplace3Points       willTryToReplace3Points      = null; // initialisation in sub-classes
@@ -67,7 +65,7 @@ public class UDG {
 	  
   // // // // // // // // // // // // // // ALGOS
 
-  public static UDG repeatNtimes(int N, UDG firstSolution, AlgoImprove1stSolution func) { 
+  public static UDG repeatNtimes(int N, UDG firstSolution, AlgoImproveSolution func) { 
     UDG currentSolution  = firstSolution.clone(); /// serialization insteaf of clone ?	
     UDG solutionCandidat = null; 
     for (int i=0;i<N;i++) { 
@@ -79,7 +77,7 @@ public class UDG {
     return currentSolution;
   }
 
-  public static UDG repeatWhileCanDoBetter(UDG firstSolution, AlgoImprove1stSolution func) { // = Local Search
+  public static UDG repeatWhileCanDoBetter(UDG firstSolution, AlgoImproveSolution func) { // = Local Search
 	// firstSolution = a valid solution
 	// func = tryToRemovePoints, tryToreplace2by1, tryToReplace3by2, ...
     UDG currentSolution  = null;	
