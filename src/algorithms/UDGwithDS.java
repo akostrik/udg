@@ -18,15 +18,20 @@ public class UDGwithDS extends UDG { // dominating set
   }
 
   public UDG ds() {
-    UDG ds = greedyAlgo(); // 94
+    // greedy                       -> 94
+	// greedy -> remove             -> 93
+	// greedy -> repeat remove      -> 91
+	// greedy -> replace2by1        -> 81
+	// greedy -> repeat replace2by1 -> 79
 
-    // ds = this.tryToReplace3by2(ds); // too long
+	UDG ds = greedyAlgo(); 
 
-    // ds = this.tryToReplace2by1(ds); // greedy-> replace2by1 -> 81, 83, 81
-    ds = repeatWhileCanDoBetter(ds,this.tryToReplace2by1); // greedy-> repeat replace2by1 -> 79
-
-    // ds = this.tryToRemovePoints(ds); // greedy -> remove -> 93, 95, ...
-    ds = repeatWhileCanDoBetter(ds,this.tryToRemovePoints); // greedy -> repeat remove -> 91
+	// optimisations:
+	// ds = this.tryToReplace3by2(ds); // too long
+    // ds = this.tryToReplace2by1(ds); 
+    ds = repeatWhileCanDoBetter(ds,this.tryToReplace2by1); 
+    // ds = this.tryToRemovePoints(ds); 
+    ds = repeatWhileCanDoBetter(ds,this.tryToRemovePoints); 
 
     return ds;
   }

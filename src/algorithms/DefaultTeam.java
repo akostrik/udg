@@ -14,6 +14,7 @@ public class DefaultTeam {
 	//UDG solution = new UDGwithDS(Vertex.convertToVertex(points)).ds();
 	//UDG solution = new UDGwithMIS(Vertex.convertToVertex(points)).misWithProperty(); 
 	UDG solution = new UDGwithCDS(Vertex.convertToVertex(points)).cds();
+	//UDG solution = UDG.allPointOfSeveralUDG(new UDG(Vertex.convertToVertex(points)).DFSreturnCycles()); // all cycles
 
 	System.out.println("solution: "+solution.toString());
 	return solution.convertToPoints();

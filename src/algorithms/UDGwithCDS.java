@@ -3,11 +3,13 @@
 package algorithms;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map;
 
 import udg.UDG;
 import udg.Vertex;
 
 public class UDGwithCDS extends UDG { // connected dominating set
+  public Map<Vertex,UDG>               mapBlackBlueComponents       = null;
 	
   public UDGwithCDS(ArrayList<Vertex> vertex) {
     super(vertex);
@@ -19,14 +21,16 @@ public class UDGwithCDS extends UDG { // connected dominating set
   }
 
   public UDG cds() { 
+	// (mis -> replace2by1) -> greedy -> repeat replace2by1 -> 132
+
 	UDG cds=cdsAlgoArticle(); 
 
-    // cds = this.tryToReplace2by1(cds); // long
-    cds = repeatWhileCanDoBetter(cds,this.tryToReplace2by1); // long
+    // optimisations:
+	// cds = this.tryToReplace2by1(cds); // long
+    //cds = repeatWhileCanDoBetter(cds,this.tryToReplace2by1); // long
+	//cds = this.tryToRemovePoints(cds); 
 
-	cds = this.tryToRemovePoints(cds); 
-	// (mis - replace2by1) - > greedy - repeat replace2by1 -> 132
-     return cds;	
+    return cds;
   }
   
   private UDG cdsAlgoArticle() { // "On greedy construction of CDS in wireless networks" Yingshu Thai Wang Yi Wan Du 
@@ -39,7 +43,7 @@ public class UDGwithCDS extends UDG { // connected dominating set
 	// connect 2/3/4/5 blackBlueComposants par anyGreyNodeAdjacentToAtLeast_i_blackNodesInDiffBlackBlueComponents
     for(int i=5; i>=2; i--) /// optimisation - lorsque i=5 trouvé pour i=2
       for(boolean changements=true; changements==true; changements=false)
-        for(Vertex connector : this.greyVertex().vertices) {
+        for(Vertex connector : this.greyVertices().vertices) {
           ArrayList<UDG> potentiallyConnectedComponents = potentiallyConnectedBlackBlueComponents(connector);
        	  System.out.println("i="+i+", "+connector.toString()+ " can connect components : "+potentiallyConnectedComponents.toString());
     	  if(potentiallyConnectedComponents!=null && potentiallyConnectedComponents.size()==i) {
@@ -48,7 +52,7 @@ public class UDGwithCDS extends UDG { // connected dominating set
     	    changements=true;
    	      }
         }
-    return this.blackAndBlueVertex();
+    return this.blackAndBlueVertices();
   }
 
   private ArrayList<UDG> potentiallyConnectedBlackBlueComponents(Vertex connector) { 

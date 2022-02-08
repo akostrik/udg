@@ -23,8 +23,9 @@ public class Vertex extends Point implements Comparable<Vertex> {
   }*/
   
   @Override
-  public int compareTo(Vertex other) { /// no duplicata of points ?
-    // System.identityHashCode = id hashcode of the objet, int, 0 if object=null
+  /// second comparator  public Vertex vertexHighest_dAsterix_id() 
+
+  public int compareTo(Vertex other) { // duplicata of points possible
 
 	// this > other
 	if(this.x>other.x) 

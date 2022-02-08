@@ -34,8 +34,8 @@ public class UDGwithMIS extends UDG { // maximal independent set
 
     markAllVertexWhite(); 
 
-    while(this.whiteVertex().size()>0) { // main cycle
-      System.out.println("mis, rest "+this.whiteVertex().size()+" vertex");
+    while(this.whiteVertices().size()>0) { // main cycle
+      System.out.println("mis, rest "+this.whiteVertices().size()+" vertex");
       Vertex dominator = newDominators(); 
       dominator.markAsDominator();
   	  for(Vertex dominatee : notExploredNeighborhoodWithoutCentralPoint(dominator).vertices) { 
@@ -45,13 +45,13 @@ public class UDGwithMIS extends UDG { // maximal independent set
   	  }
     } 
     
-    UDG misWithProperty=this.dominatorsVertex(); 
+    UDG misWithProperty=this.dominatorsVertices(); 
 	misWithProperty=tryToReplace2by1(misWithProperty); // too long
     return misWithProperty; 
   }  
 
   private Vertex newDominators() { // elections from White Active
-	if(this.dominatorsVertex().size()==0) // the first dominator
+	if(this.dominatorsVertices().size()==0) // the first dominator
 	  return this.theMostConnectedPoint();  
     Vertex activeWhite=anyNotExploredActiveVertex();
     return this.notExploredActiveNeighborhoodWithCentralPoint(activeWhite).vertexHighest_dAsterix_id();
