@@ -7,7 +7,7 @@ Sorbonne University, Master Informatics, DAAR (Développement des Algorithmes d�
 *Feedback Vertex Set* is a minimum sized subset of vertices F ⊆ V such that the subgraph G[V\F] induced by V\F in G is cycleless.
   - Greedy algo
   - Optimisation by Local Search 
-  - Algo of the article "A 2-approximation algorithm for the undirected feedback vertex set problem" by Bafna, Berman, Fujito - soon
+  - Algo of the article "A 2-approximation algorithm for the undirected feedback vertex set problem" by Bafna, Berman, Fujito - soon (unweighted version)
 
 ## MIS, Maximal Independent Set
 *Maximal Independent Set* is a subset of vertices I⊆V such that the subgraph G[I] induced by I is edgeless, and such that the subset I is maximal by inclusion.
