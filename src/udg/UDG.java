@@ -939,4 +939,12 @@ public class UDG {
 	  allPoinsOfAllCycles.addAll(udg.vertices);
 	return allPoinsOfAllCycles;
   }
+  
+  public Vertex vertexOfMinDegree() { /// used?
+    Vertex vertexOfMinDegree=this.get(0);
+    for(Vertex p : vertices)
+      if(degree(p)<degree(vertexOfMinDegree))
+    	vertexOfMinDegree=p;
+    return vertexOfMinDegree;
+  }
 }

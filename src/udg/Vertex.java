@@ -16,33 +16,21 @@ public class Vertex extends Point implements Comparable<Vertex> {
     this.active = false;
   }
 
- /* /// public Vertex(int x, int y, Color color, boolean active) {
-    super(x,y);
-    this.color  = color;
-    this.active = active;
-  }*/
-  
   @Override
-  /// second comparator  public Vertex vertexHighest_dAsterix_id() 
-
-  public int compareTo(Vertex other) { // duplicata of points possible
-
-	// this > other
+  /// second comparator  public Vertex vertexHighest_dAsterix_id() ?
+  public int compareTo(Vertex other) { // duplicata of points possible // not used
 	if(this.x>other.x) 
 	  return 1;
     if(this.x==other.x && this.y>other.y) 
 	  return 1;
     if(this.x==other.x && this.y==other.y && System.identityHashCode(this)>System.identityHashCode(other) ) 
 	  return 1;
-    		
-    // this < other
     if(this.x<other.x) 
 	  return -1;
     if(this.x==other.x && this.y<other.y) 
 	  return -1;
     if(this.x==other.x && this.y==other.y && System.identityHashCode(this)<System.identityHashCode(other) ) 
 	  return -1;
-	
     return 0;
   }
 
@@ -50,7 +38,7 @@ public class Vertex extends Point implements Comparable<Vertex> {
 	return g.notExploredNeighborhoodWithoutCentralPoint(this).size();
   }
 
-  public int getDegree(UDG g) { /// нужно?
+  public int getDegree2(UDG g) { /// нужно?
 	return g.neighborhoodWithoutCentralPoint(this).size();
   }
 

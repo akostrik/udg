@@ -9,9 +9,9 @@ public class UDGwithFVS extends UDG { // feedback vertex set
   public UDGwithFVS(ArrayList<Vertex> points) {
     super(points);
     this.shouldContinueGreedy         = (currentSolution,rest)           -> { return !this.isSolution.method(currentSolution); };
-    this.toRemoveBeforeContinueGreedy = (pointsToRemove)                 -> { return new UDG(pointsToRemove);                   };
+    this.toRemoveBeforeContinueGreedy = (pointsToRemove)                 -> { return new UDG(pointsToRemove);                  };
     this.isSolution                   = (solutionCandidat)               -> { return this.hasAsFVS(solutionCandidat);          };
-    this.shouldTryToReplace2Points    = (Vertex p1, Vertex p2)           -> { return true;                                     }; 
+    this.shouldTryToReplace2Points    = (Vertex p1, Vertex p2)           -> { return true;                                     }; /// ?
     this.shouldTryToReplace3Points    = (Vertex p1, Vertex p2, Vertex p3)-> { return true;                                     };
   }
 
@@ -27,5 +27,21 @@ public class UDGwithFVS extends UDG { // feedback vertex set
     //allCycles();
 	//System.out.println("cycles : "+this.cyclesToString());
     return fvs;	  
+  }
+  
+  public UDG FVSbafnaBermanFujito() {
+	UDG clone = this.clone();
+	UDG C;
+	clone.cleanup();
+	int i=0;
+    while(clone.vertices.size()>0) {
+      i++;
+      if((C=clone.anySemidisjointCycle())!=null) {
+    	int gamma = 1; //C.degree(C.vertexOfMinDegree());
+    	
+      }
+    }
+	
+	return null;	  
   }
 }
