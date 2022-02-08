@@ -19,6 +19,7 @@ public class UDG {
   public ArrayList<Vertex>             vertices                      = null; // initialisation in the constructor
   public static int                    edgeThreshold;                       // the only init., here ? in the calling class ?
   public AlgoImproveSolution           tryToRemovePoints            = null; // initialisation in the constructor
+  private static int counter=0; // tmp
   public AlgoImproveSolution           tryToReplace2by1             = null; // initialisation in the constructor
   public AlgoImproveSolution           tryToReplace3by2             = null; // initialisation in the constructor
   public Algo                          greedyAlgo                   = null; // initialisation in the constructor
@@ -253,26 +254,22 @@ public class UDG {
     	DFSprintCyclesExplore(pathStack);
     	pathStack.remove(newPoint);
 	  }
-	  else if(newPoint.isGrey() && !newPoint.equals(pathStack.get(pathStack.size()-2))) 
-		System.out.println("cycle : "+pathStack.vertices.subList(pathStack.vertices.indexOf(newPoint),pathStack.vertices.size()));
+	  else if(newPoint.isGrey() && !newPoint.equals(pathStack.get(pathStack.size()-2))) {
+		UDG cycle = new UDG(pathStack.vertices.subList(pathStack.vertices.indexOf(newPoint),pathStack.vertices.size())); 
+		System.out.println((counter++)+" cycle "+(isSemidisjointCycle(cycle)?" Semidisjoint ":"")+pathStack.vertices.subList(pathStack.vertices.indexOf(newPoint),pathStack.vertices.size()));
+	  }
     }  
 	lastPoint.markBlack();
   }
 
   public ArrayList<UDG> DFSreturnCycles() { 
     markAllVertexWhite(); 
-	Map<String,UDG> cycles = new HashMap<String,UDG>(); 
+	ArrayList<UDG> cycles = new ArrayList<UDG>(); //Map<String,UDG> cycles no need, DFS gives no duplicatata (and no palindromes) 
     for(Vertex p : vertices) 
       if(p.isWhite()) 
-    	for(UDG cycle : DFSreturnCyclesExplore(new UDG(p))) { // ArrayList<UDG>
-    	  UDG cycleCLone = cycle.clone();
-   	      Collections.sort(cycle.vertices);
-   	      // map (String id, UDG cycle) without duplicata, but DFS has alredy no duplicatata (palindromes only) ?
-  		  System.out.println("put   : "+cycle.allVerticesAsString()+" , "+cycleCLone .toString());
-   	      cycles.put(cycle.allVerticesAsString(),cycleCLone);
-    	} 
-	System.out.println("return : "+(new ArrayList<UDG>(cycles.values()).toString()));
-    return new ArrayList<UDG>(cycles.values());
+    	for(UDG cycle : DFSreturnCyclesExplore(new UDG(p))) 
+   	      cycles.add(cycle);
+    return cycles; 
   }
 
   public ArrayList<UDG> DFSreturnCyclesExplore(UDG pathStack) { 
@@ -286,14 +283,96 @@ public class UDG {
   	    pathStack.remove(newPoint);
 	  }
 	  else if(newPoint.isGrey() && !newPoint.equals(pathStack.get(pathStack.size()-2))) {
-		System.out.println("cycle : "+pathStack.vertices.subList(pathStack.vertices.indexOf(newPoint),pathStack.vertices.size()));
-		cycles.add(new UDG(pathStack.vertices.subList(pathStack.vertices.indexOf(newPoint),pathStack.vertices.size()))); 
+		UDG cycle = new UDG(pathStack.vertices.subList(pathStack.vertices.indexOf(newPoint),pathStack.vertices.size())); 
+		System.out.println((counter++)+" cycle "+(isSemidisjointCycle(cycle)?" Semidisjoint ":"")+pathStack.vertices.subList(pathStack.vertices.indexOf(newPoint),pathStack.vertices.size()));
+		cycles.add(cycle); 
 	  }
-    }
+	}
 	lastPoint.markBlack();
 	return new ArrayList<UDG>(cycles);
   }
 
+  // // // // // // // // // // // // // FOR ALGO BAFNA BERMAN FUJITO
+
+  public ArrayList<UDG> DFSreturnSemidisjointCycles() { 
+    markAllVertexWhite(); 
+	ArrayList<UDG> cycles = new ArrayList<UDG>(); //Map<String,UDG> cycles no need, DFS gives no duplicatata (and no palindromes) 
+    for(Vertex p : vertices) 
+      if(p.isWhite()) 
+    	for(UDG cycle : DFSreturnSemidisjointCyclesExplore(new UDG(p))) 
+   	      cycles.add(cycle);
+    return cycles; 
+  }
+
+  public ArrayList<UDG> DFSreturnSemidisjointCyclesExplore(UDG pathStack) { 
+	List<UDG> cycles = new ArrayList<UDG>();
+	Vertex lastPoint = pathStack.get(pathStack.size()-1);
+    lastPoint.markGrey(); 
+	for(Vertex newPoint : this.neighborhoodWithoutCentralPoint(lastPoint).vertices) {
+      if(newPoint.isWhite()) {
+  	    pathStack.add(newPoint);
+  	    cycles.addAll(DFSreturnSemidisjointCyclesExplore(pathStack));
+  	    pathStack.remove(newPoint);
+	  }
+	  else if(newPoint.isGrey() && !newPoint.equals(pathStack.get(pathStack.size()-2))) {
+		System.out.println((counter++)+" cycle : "+pathStack.vertices.subList(pathStack.vertices.indexOf(newPoint),pathStack.vertices.size()));
+		UDG cycle = new UDG(pathStack.vertices.subList(pathStack.vertices.indexOf(newPoint),pathStack.vertices.size())); 
+		if(isSemidisjointCycle(cycle))
+		  cycles.add(cycle); 
+	  }
+	}
+	lastPoint.markBlack();
+	return new ArrayList<UDG>(cycles);
+  }
+
+  public UDG anySemidisjointCycle() { 
+    markAllVertexWhite(); 
+    for(Vertex p : vertices) 
+      if(p.isWhite()) { 
+    	UDG semidisjointCycle=anySemidisjointCycleExplore(new UDG(p));
+    	if(semidisjointCycle!=null) return semidisjointCycle;
+      }
+    return null;
+  }
+
+  public UDG anySemidisjointCycleExplore(UDG pathStack) { 
+	Vertex lastPoint = pathStack.get(pathStack.size()-1);
+    lastPoint.markGrey(); 
+	for(Vertex newPoint : this.neighborhoodWithoutCentralPoint(lastPoint).vertices) {
+      if(newPoint.isWhite()) {
+  	    pathStack.add(newPoint);
+  	    return anySemidisjointCycleExplore(pathStack);
+	  }
+	  else if(newPoint.isGrey() && !newPoint.equals(pathStack.get(pathStack.size()-2))) {
+		System.out.println((counter++)+" cycle : "+pathStack.vertices.subList(pathStack.vertices.indexOf(newPoint),pathStack.vertices.size()));
+		UDG cycle = new UDG(pathStack.vertices.subList(pathStack.vertices.indexOf(newPoint),pathStack.vertices.size())); 
+		if(isSemidisjointCycle(cycle))
+		  return cycle; 
+	  }
+	}
+	lastPoint.markBlack();
+	return null;
+  }
+
+  public boolean isSemidisjointCycle(UDG cycleToVerify) {
+	if(!isEdge(cycleToVerify.vertices.get(0),cycleToVerify.vertices.get(cycleToVerify.vertices.size()-1))) return false;
+	boolean weHaveAlreadySeenVertexOfDegreeNot2=false;
+	for(Vertex p : cycleToVerify.vertices)
+	  if(this.degree(p)!=2) {
+		if(weHaveAlreadySeenVertexOfDegreeNot2) return false;
+	    weHaveAlreadySeenVertexOfDegreeNot2=true;
+	  }
+	return true;
+  }
+
+  public void cleanup() { // enleve les points à degrée<=1
+	ArrayList<Vertex> toRemove = new ArrayList<Vertex>();
+	for(Vertex p : this.vertices)
+	  if(p.getDegree(this)>1)
+		toRemove.add(p);
+	this.vertices.removeAll(toRemove);
+  }
+ 
   // // // // // // // // // // // // // UTILS - CLONE
 
   public UDG clone() {
@@ -369,6 +448,10 @@ public class UDG {
 	UDG neighborhood = neighborhoodWithCentralPoint(p);
 	neighborhood.remove(p);
 	return neighborhood;
+  }
+
+  public int degree(Vertex p) {
+	return neighborhoodWithoutCentralPoint(p).size();
   }
 
   public UDG notExploredNeighborhoodWithoutCentralPoint(Vertex p) { // not clone 
@@ -515,7 +598,7 @@ public class UDG {
 	return this.cloneWithoutDuplicata().size()==this.connectedComponent(this.get(0)).size();
   }
   
-  // // // // // // // // // // // // // UTILS
+ // // // // // // // // // // // // // UTILS
 
   public String allVerticesAsString() {
 	String verticesAsString="";
@@ -846,15 +929,7 @@ public class UDG {
     return toReturn;
   }
 
-  public void cleanup() { // enleve les points à degrée<=1
-	ArrayList<Vertex> toRemove = new ArrayList<Vertex>();
-	for(Vertex p : this.vertices)
-	  if(p.getDegree(this)>1)
-		toRemove.add(p);
-	this.vertices.removeAll(toRemove);
-  }
-  
-  public int score() {
+  public int score() { 
 	return this.size();
   }
 
