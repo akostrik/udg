@@ -1,8 +1,8 @@
-package functionalInterfaces;
+package utilities;
 import java.io.Serializable;
 
-import udg.UDG;
-import udg.Vertex;
+import algorithms.UDG;
+import algorithms.Vertex;
 @FunctionalInterface
 
 public interface ToRemoveBeforeContinueGreedy extends Serializable {

@@ -11,9 +11,6 @@
 package algorithms;
 import java.util.ArrayList;
 
-import udg.UDG;
-import udg.Vertex;
-
 public class UDGwithMIS extends UDG { // maximal independent set
 
   public UDGwithMIS(ArrayList<Vertex> vertex) { 

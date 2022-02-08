@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 
-import udg.UDG;
-import udg.Vertex;
-
 public class UDGwithCDS extends UDG { // connected dominating set
   public Map<Vertex,UDG>               mapBlackBlueComponents       = null;
 	

@@ -1,8 +1,8 @@
-package functionalInterfaces;
+package utilities;
 import java.io.Serializable;
 import java.lang.FunctionalInterface;
 
-import udg.UDG;
+import algorithms.UDG;
 @FunctionalInterface
 
 public interface ToReturnGreedy extends Serializable {

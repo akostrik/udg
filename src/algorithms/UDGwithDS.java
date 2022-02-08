@@ -1,9 +1,6 @@
 package algorithms;
 import java.util.ArrayList;
 
-import udg.UDG;
-import udg.Vertex;
-
 public class UDGwithDS extends UDG { // dominating set
 
   public UDGwithDS(ArrayList<Vertex> vertex) {

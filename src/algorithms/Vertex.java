@@ -1,19 +1,27 @@
-package udg;
+package algorithms;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 
-import algorithms.UDGwithMIS;
+import utilities.Color;
 
 public class Vertex extends Point implements Comparable<Vertex> {
   public Color   color;
   public boolean active; // for algo MIS
+  public double  weight; // 
 
   public Vertex(int x, int y) {
     super(x,y);
     this.color  = Color.WHITE;
     this.active = false;
+  }
+
+  public Vertex(int x, int y, double weight) {
+    super(x,y);
+    this.color  = Color.WHITE;
+    this.active = false;
+    this.weight = weight;
   }
 
   @Override
@@ -36,10 +44,6 @@ public class Vertex extends Point implements Comparable<Vertex> {
 
   public int countEffectiveDegree(UDG g) {  // for MIS
 	return g.notExploredNeighborhoodWithoutCentralPoint(this).size();
-  }
-
-  public int getDegree2(UDG g) { /// нужно?
-	return g.neighborhoodWithoutCentralPoint(this).size();
   }
 
   //////////////////////// COLORS

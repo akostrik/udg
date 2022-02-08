@@ -1,4 +1,4 @@
-package udg;
+package utilities;
 
 public enum Color {
   WHITE,

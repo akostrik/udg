@@ -1,8 +1,8 @@
-package functionalInterfaces;
+package utilities;
 import java.io.Serializable;
 import java.lang.FunctionalInterface;
 
-import udg.Vertex;
+import algorithms.Vertex;
 @FunctionalInterface
 
 public interface ShouldTryToReplace2Points extends Serializable {

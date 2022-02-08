@@ -1,4 +1,4 @@
-package udg; 
+package algorithms; 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -6,13 +6,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import functionalInterfaces.IsSolution;
-import functionalInterfaces.AlgoImproveSolution;
-import functionalInterfaces.Algo;
-import functionalInterfaces.ShouldTryToReplace2Points;
-import functionalInterfaces.ShouldTryToReplace3Points;
-import functionalInterfaces.ShouldContinueGreedy;
-import functionalInterfaces.ToRemoveBeforeContinueGreedy;
+
+import utilities.Algo;
+import utilities.AlgoImproveSolution;
+import utilities.Color;
+import utilities.IsSolution;
+import utilities.ShouldContinueGreedy;
+import utilities.ShouldTryToReplace2Points;
+import utilities.ShouldTryToReplace3Points;
+import utilities.ToRemoveBeforeContinueGreedy;
+
 import java.awt.Point;
 
 public class UDG {
@@ -284,7 +287,7 @@ public class UDG {
 	  }
 	  else if(newPoint.isGrey() && !newPoint.equals(pathStack.get(pathStack.size()-2))) {
 		UDG cycle = new UDG(pathStack.vertices.subList(pathStack.vertices.indexOf(newPoint),pathStack.vertices.size())); 
-		System.out.println((counter++)+" cycle "+(isSemidisjointCycle(cycle)?" Semidisjoint ":"")+pathStack.vertices.subList(pathStack.vertices.indexOf(newPoint),pathStack.vertices.size()));
+		// System.out.println((counter++)+" cycle "+(isSemidisjointCycle(cycle)?" Semidisjoint ":"")+pathStack.vertices.subList(pathStack.vertices.indexOf(newPoint),pathStack.vertices.size()));
 		cycles.add(cycle); 
 	  }
 	}
@@ -315,7 +318,7 @@ public class UDG {
   	    pathStack.remove(newPoint);
 	  }
 	  else if(newPoint.isGrey() && !newPoint.equals(pathStack.get(pathStack.size()-2))) {
-		System.out.println((counter++)+" cycle : "+pathStack.vertices.subList(pathStack.vertices.indexOf(newPoint),pathStack.vertices.size()));
+		// System.out.println((counter++)+" cycle : "+pathStack.vertices.subList(pathStack.vertices.indexOf(newPoint),pathStack.vertices.size()));
 		UDG cycle = new UDG(pathStack.vertices.subList(pathStack.vertices.indexOf(newPoint),pathStack.vertices.size())); 
 		if(isSemidisjointCycle(cycle))
 		  cycles.add(cycle); 
@@ -344,7 +347,7 @@ public class UDG {
   	    return anySemidisjointCycleExplore(pathStack);
 	  }
 	  else if(newPoint.isGrey() && !newPoint.equals(pathStack.get(pathStack.size()-2))) {
-		System.out.println((counter++)+" cycle : "+pathStack.vertices.subList(pathStack.vertices.indexOf(newPoint),pathStack.vertices.size()));
+		//System.out.println((counter++)+" cycle : "+pathStack.vertices.subList(pathStack.vertices.indexOf(newPoint),pathStack.vertices.size()));
 		UDG cycle = new UDG(pathStack.vertices.subList(pathStack.vertices.indexOf(newPoint),pathStack.vertices.size())); 
 		if(isSemidisjointCycle(cycle))
 		  return cycle; 
@@ -368,16 +371,19 @@ public class UDG {
   public void cleanup() { // enleve les points à degrée<=1
 	ArrayList<Vertex> toRemove = new ArrayList<Vertex>();
 	for(Vertex p : this.vertices)
-	  if(p.getDegree(this)>1)
+	  if(this.degree(p)<=1)
 		toRemove.add(p);
 	this.vertices.removeAll(toRemove);
   }
  
   // // // // // // // // // // // // // UTILS - CLONE
 
-  public UDG clone() {
+  public UDG clone() { ///
     // to serialize a lambda in Java 8 : possible, strongly discouraged, lambdas may not deserialize properly on another JRE ?
-	return new UDG(clone(this.vertices)); 
+	ArrayList<Vertex> newVertices = new ArrayList<Vertex>();
+	for(Vertex p : this.vertices)
+	  newVertices.add(new Vertex(p.x,p.y,p.weight));
+	return new UDG(newVertices); 
   }
 
   public UDG clonePartExternalTo2(UDG g) {
@@ -705,7 +711,13 @@ public class UDG {
   }
 
   public boolean hasAsFVS(UDG fvsToVerify) {
-	return !this.partExternalTo(fvsToVerify).clone().cyclesExist();
+	System.out.println("____________________________ verify if ");
+	System.out.println(this.toString());
+	System.out.println(" hasAsFVS :");
+	System.out.println(fvsToVerify.toString());
+	System.out.println(" partExternalTo = "+this.partExternalTo(fvsToVerify));
+	System.out.println("  __________________________ "+(!this.partExternalTo(fvsToVerify).cyclesExist()));
+	return !this.partExternalTo(fvsToVerify).cyclesExist(); // clone()
   }
   
   public Vertex anyNotExploredActiveVertex() { 
@@ -747,7 +759,7 @@ public class UDG {
    public boolean everyPointMayBeExceptOneHasDegreeTwo() {
     boolean weHaveAlreadySeeDegreeNoEqualsToTwo=false;
 	for(Vertex p : this.vertices){
-      if(p.getDegree(this)!=2) {
+      if(this.degree(p)!=2) {
         if(weHaveAlreadySeeDegreeNoEqualsToTwo) 
   	      return false;
         else 
@@ -769,7 +781,7 @@ public class UDG {
     if(vertices.size()==0) return null;
     Vertex theMostConnectedPoint=vertices.get(0);
     for (Vertex p: vertices) 
-      if (p.getDegree(this)>theMostConnectedPoint.getDegree(this)) 
+      if (this.degree(p)>this.degree(theMostConnectedPoint)) 
         theMostConnectedPoint=p;
     return theMostConnectedPoint;
   }
@@ -902,33 +914,6 @@ public class UDG {
 	return !p1.equals(p2) && p1.distance(p2) < edgeThreshold; /// p1==p2 ?
   }
   
-  public String toString() {
-    if(this.size()==0) return " vide";
-	String toReturn=" "+this.size()+":";
-    for(Vertex p : vertices)
-      if(p!=null)
-    	toReturn += "["+p.x+","+p.y+"]";
-      else
-    	toReturn += "[null]";
-	return toReturn;
-  }
-  
-  public String toStringWithColorsDegrees() {
-    if(this.size()==0) return " vide";
-    String toReturn=this.size()+" vertex: ";
-    for(Vertex p : vertices) 
-      if(p==null) toReturn += "[null]";
-      else        toReturn += p.toString();
-	return toReturn;
-  }
-  
-  public static String cyclesToString(ArrayList<UDG> cycles) {
-    String toReturn = cycles.size()+" cycles:\n";
-    for(UDG cycle : cycles) 
-   	  toReturn += cycle.toString()+"\n";
-    return toReturn;
-  }
-
   public int score() { 
 	return this.size();
   }
@@ -946,5 +931,51 @@ public class UDG {
       if(degree(p)<degree(vertexOfMinDegree))
     	vertexOfMinDegree=p;
     return vertexOfMinDegree;
+  }
+  
+  public void setWeightForAllVertices(int weight) {
+	for(Vertex p : vertices)
+	  p.weight=weight;
+  }
+  
+  public UDG withoutOnePoint(Vertex p) {
+	UDG clone = this.clone();  
+	clone.remove(p);
+	return clone;
+  }
+  public String toString() {
+    if(this.size()==0) return " vide";
+	String toReturn=" "+this.size()+":";
+    for(Vertex p : vertices)
+      if(p!=null)
+    	toReturn += "["+p.x+","+p.y+"]";
+      else
+    	toReturn += "[null]";
+	return toReturn;
+  }
+	  
+  public String toStringWithColorsDegrees() {
+    if(this.size()==0) return " vide";
+    String toReturn=this.size()+" vertex: ";
+    for(Vertex p : vertices) 
+      if(p==null) toReturn += "[null]";
+      else        toReturn += p.toString();
+	return toReturn;
+  }
+	  
+  public String toStringWithWightDegrees() {
+    if(this.size()==0) return " vide";
+    String toReturn=this.size()+" vertex: ";
+    for(Vertex p : vertices) 
+      if(p==null) toReturn += "[null]";
+      else        toReturn += "["+p.x+" "+p.y+" "+p.weight+" "+this.degree(p)+"]";
+	return toReturn;
+  }
+		  
+  public static String cyclesToString(ArrayList<UDG> cycles) {
+    String toReturn = cycles.size()+" cycles:\n";
+    for(UDG cycle : cycles) 
+   	  toReturn += cycle.toString()+"\n";
+    return toReturn;
   }
 }
