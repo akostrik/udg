@@ -1,6 +1,6 @@
 Sorbonne University, Master Informatics, DAAR (Développement des Algorithmes d’Application Réticulaire)
 
-# UDG, Unit Disk Graph with Algos
+# UDG, Unweighted Unit Disk Graph with Algos
 *UDP*, *Unit Disk Graph*, *Geometric graph* G=(V,E) in a 2D plane: a set of points in the plane called vertices, and a threshold on the distance between the points : there is an edge between two vertices if and only if the Euclidean distance between the two vertices is smaller than this threshold.
   
 ## FVS, Feedback Vertex Set
