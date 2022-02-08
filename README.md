@@ -1,13 +1,13 @@
 Sorbonne University, Master Informatics, DAAR (Développement des Algorithmes d’Application Réticulaire)
 
-# UDG, Unit Disk Graph with Algos
-*UDP*, *Unit Disk Graph*, *Geometric graph* G=(V,E) in a 2D plane: a set of points in the plane called vertices, and a threshold on the distance between the points : there is an edge between two vertices if and only if the Euclidean distance between the two vertices is smaller than this threshold.
+# Unweighted Undirected Unit Disk Graph (UDG) with Algos
+*UDG*, *Unit Disk Graph*, *Geometric graph* G=(V,E) in a 2D plane: a set of points called vertices, and a threshold on the distance between the points : there is an edge between two vertices if and only if the Euclidean distance between the two vertices is smaller than this threshold.
   
 ## FVS, Feedback Vertex Set
 *Feedback Vertex Set* is a minimum sized subset of vertices F ⊆ V such that the subgraph G[V\F] induced by V\F in G is cycleless.
   - Greedy algo
   - Optimisation by Local Search 
-  - Algo de l'article "A 2-approximation algorithm for the undirected feedback vertex set problem" by Bafna, Berman, Fujito - soon
+  - Unweighted version of the algo of the article "A 2-approximation algorithm for the undirected feedback vertex set problem" by Bafna, Berman, Fujito - soon
 
 ## MIS, Maximal Independent Set
 *Maximal Independent Set* is a subset of vertices I⊆V such that the subgraph G[I] induced by I is edgeless, and such that the subset I is maximal by inclusion.
