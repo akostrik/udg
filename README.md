@@ -1,7 +1,7 @@
 Sorbonne University, Master Informatics, DAAR (Développement des Algorithmes d’Application Réticulaire)
 
 # Unweighted Undirected Unit Disk Graph (UDG) with Algos
-*UDG*, *Unit Disk Graph*, *Geometric graph* G=(V,E) in a 2D plane: a set of points in the plane called vertices, and a threshold on the distance between the points : there is an edge between two vertices if and only if the Euclidean distance between the two vertices is smaller than this threshold.
+*UDG*, *Unit Disk Graph*, *Geometric graph* G=(V,E) in a 2D plane: a set of points called vertices, and a threshold on the distance between the points : there is an edge between two vertices if and only if the Euclidean distance between the two vertices is smaller than this threshold.
   
 ## FVS, Feedback Vertex Set
 *Feedback Vertex Set* is a minimum sized subset of vertices F ⊆ V such that the subgraph G[V\F] induced by V\F in G is cycleless.
