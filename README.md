@@ -12,7 +12,7 @@ Sorbonne University, Master Informatics, DAAR (Développement des Algorithmes d�
 ## MIS, Maximal Independent Set
 *Maximal Independent Set* is a subset of vertices I⊆V such that the subgraph G[I] induced by I is edgeless, and such that the subset I is maximal by inclusion.
   - Naive algo
-  - Non-distribied version of the algo MIS of the article "Connected Domination in Multihop Ad Hoc Wireless Networks" by Cardei, Cheng, Cheng, Du 
+  - Non-distribied version of the article "Connected Domination in Multihop Ad Hoc Wireless Networks" by Cardei, Cheng, Cheng, Du (the algo MIS) 
 
 ## DS, Dominating Set
 *Minimum Dominating Set* is a minimum sized subset of vertices D⊆V such that every vertex v∈V either belong to D or is a neighbour
