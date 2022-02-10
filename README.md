@@ -1,12 +1,12 @@
 Sorbonne University, Master Informatics, DAAR (Développement des Algorithmes d’Application Réticulaire)
 
-# (Unweighted Undirected) Unit Disk Graph with Algos
+# (unweighted undirected) Unit Disk Graph with Algos
 *UDG*, *Unit Disk Graph*, *Geometric graph* G=(V,E) in a 2D plane: a set of points called vertices, and a threshold on the distance between the points : there is an edge between two vertices if and only if the Euclidean distance between the two vertices is smaller than this threshold.
   
 ## FVS, Feedback Vertex Set
 *Feedback Vertex Set* is a minimum sized subset of vertices F ⊆ V such that the subgraph G[V\F] induced by V\F in G is cycleless.
   - Greedy algo
-  - Unweighted version of the algo of the article "A 2-approximation algorithm for the undirected feedback vertex set problem" by Bafna, Berman, Fujito
+  - Algo of the article "A 2-approximation algorithm for the undirected feedback vertex set problem" by Bafna, Berman, Fujito
   - Optimisation by Local Search 
 
 ## MIS, Maximal Independent Set
