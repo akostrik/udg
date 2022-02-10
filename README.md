@@ -6,7 +6,7 @@ Sorbonne University, Master Informatics, DAAR (Développement des Algorithmes d�
 ## FVS, Feedback Vertex Set
 *Feedback Vertex Set* is a minimum sized subset of vertices F ⊆ V such that the subgraph G[V\F] induced by V\F in G is cycleless.
   - Greedy algo
-  - Unweighted version of the algo of the article "A 2-approximation algorithm for the undirected feedback vertex set problem" by Bafna, Berman, Fujito
+  - Algo of the article "A 2-approximation algorithm for the undirected feedback vertex set problem" by Bafna, Berman, Fujito
   - Optimisation by Local Search 
 
 ## MIS, Maximal Independent Set
