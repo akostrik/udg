@@ -367,20 +367,20 @@ public class UDG {
   public UDG anySemidisjointCycleExplore(UDG path) { 
 	Vertex lastPoint = path.get(path.size()-1);
     lastPoint.markGrey(); 
-    UDG anySJsycle = new UDG();
+    UDG sjCycle = new UDG();
 	for(Vertex newPoint : this.neighborhoodWithoutCentralPoint(lastPoint).vertices) {
       if(newPoint.isWhite()) {
   	    path.add(newPoint);
-  	    anySJsycle=anySemidisjointCycleExplore(path);
+  	    sjCycle=anySemidisjointCycleExplore(path);
 	  }
 	  else if(newPoint.isGrey() && !newPoint.equals(path.get(path.size()-2))) {
 		UDG cycle = new UDG(path.vertices.subList(path.vertices.indexOf(newPoint),path.vertices.size())); 
 		if(isSemidisjointCycle(cycle)) 
-		  anySJsycle = cycle; 
+		  sjCycle = cycle; 
 	  }
 	}
 	lastPoint.markBlack();
-	return anySJsycle;
+	return sjCycle;
   }
 
   public boolean isSemidisjointCycle(UDG cycleToVerify) {
@@ -765,6 +765,11 @@ public class UDG {
     return null;
   }
   
+  public Vertex anyCentralVertex() {
+	Vertex p=null;
+	return p;
+  }
+  
   public Vertex vertexHighest_dAsterix_id() {
 	Vertex vertexHighest_dAsterix_id=vertices.get(0);
 	for(Vertex candidat : vertices)
@@ -942,7 +947,7 @@ public class UDG {
 	return this.size();
   }
 
-  public static UDG allPointOfSeveralUDG(ArrayList<UDG> UDGs) { // debugging
+  public static UDG unionOf(ArrayList<UDG> UDGs) { // debugging
 	UDG allPoinsOfAllCycles = new UDG();
 	for(UDG udg : UDGs) 
 	  allPoinsOfAllCycles.addAll(udg.vertices);

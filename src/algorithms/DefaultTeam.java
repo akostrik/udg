@@ -20,7 +20,7 @@ public class DefaultTeam {
     //(new UDG(Vertex.convertToVertex(points))).printCyclesDFS(); 
     //(new UDG(Vertex.convertToVertex(points))).printSemidisjointeCyclesDFS(); 
 	//(new UDG(Vertex.convertToVertex(points))).cyclesExistDFS();
-	//solution = UDG.allPointOfSeveralUDG(new UDG(Vertex.convertToVertex(points)).returnCyclesDFS()); // all cycles
+	solution = UDG.unionOf(new UDG(Vertex.convertToVertex(points)).returnCyclesDFS()); // all cycles
     //solution = (new UDG(Vertex.convertToVertex(points))).anySemidisjointCycle();
 
     System.out.println(solution!=null ? "solution: "+solution.toString() : "null");

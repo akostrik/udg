@@ -22,7 +22,7 @@ public class UDGwithMIS extends UDG { // maximal independent set
     UDG mis = misWithProperty(); // need for CDS
     // UDG mis = misNaivWithoutProperty(); // doesn't suit for CDS
 
-    // optimizer the first solution: 
+    // optimize the first solution: 
 	mis=tryToReplace2by1(mis); // too long
 
 	return mis;

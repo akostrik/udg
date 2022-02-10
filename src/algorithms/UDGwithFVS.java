@@ -18,7 +18,7 @@ public class UDGwithFVS extends UDG { // feedback vertex set
 	// UDG fvs = this.greedyAlgo();
     UDG fvs = FVSbafnaBermanFujito();    
 
-    // optimizer first solution: 
+    // optimize the first solution: 
 	// this.solution = repeatWhileCanDoBetter((UDP)this,this.tryToRemovePoints); 
     // this.solution = tryToReplace2by1((UDP)this); // 
     // this.solution = repeatNtimes(2,(UDP)this,this.tryToReplace2by1); // long

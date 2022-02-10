@@ -21,7 +21,7 @@ public class UDGwithCDS extends UDG { // connected dominating set
     // get first solution:
 	UDG cds=CDSyingshuThaiWangYiWanDu(); 
 
-    // optimizer the first solution: 
+    // optimize the first solution: 
 	// cds = this.tryToReplace2by1(cds); // long
     // cds = repeatWhileCanDoBetter(cds,this.tryToReplace2by1); // long
 	// cds = this.tryToRemovePoints(cds); 
