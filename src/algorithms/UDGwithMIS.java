@@ -29,6 +29,7 @@ public class UDGwithMIS extends UDG { // maximal independent set
   }
   
   public UDG misWithProperty() { 
+	// "Connected Domination in Multihop Ad Hoc Wireless Networks" by Cardei, Cheng, Cheng, Du	
 	// propetrty = "distance 2 hops" => suits for CDS "On greedy construction of CDS in wireless networks" by Yingshu et al
     markAllVertexWhite(); 
     while(this.whiteVertices().size()>0) { // main cycle
