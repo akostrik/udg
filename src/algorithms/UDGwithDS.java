@@ -21,9 +21,10 @@ public class UDGwithDS extends UDG { // dominating set
 	// greedy -> replace2by1        -> 81
 	// greedy -> repeat replace2by1 -> 79
 
+    // get first solution:
 	UDG ds = greedyAlgo(); 
 
-	// optimisations:
+    // optimizer the first solution: 
 	// ds = this.tryToReplace3by2(ds); // too long
     // ds = this.tryToReplace2by1(ds); 
     ds = repeatWhileCanDoBetter(ds,this.tryToReplace2by1); 

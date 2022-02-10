@@ -1,13 +1,3 @@
-// algo non ditribué
-// optimisation - safe effective degree (but < complexity of CDS)
-/*
-390 400
-400 440
-390 480
-460 400
-450 440
-460 480
-*/
 package algorithms;
 import java.util.ArrayList;
 
@@ -22,18 +12,28 @@ public class UDGwithMIS extends UDG { // maximal independent set
     }; 
   }
 
-  public UDG misWithProperty() { 
-	// "distance 2 hops" => suits for CDS as in "On greedy construction of CDS in wireless networks" by Yingshu et al
+  public UDG mis() { 
     if(!this.isConnected()) {
-      System.out.println("input UPD must be connected ");
-      return new UDG();
+       System.out.println("input UPD must be connected ");
+       return new UDG();
     }
 
-    markAllVertexWhite(); 
+    // get first solution:
+    UDG mis = misWithProperty(); // need for CDS
+    // UDG mis = misNaivWithoutProperty(); // doesn't suit for CDS
 
+    // optimizer the first solution: 
+	mis=tryToReplace2by1(mis); // too long
+
+	return mis;
+  }
+  
+  public UDG misWithProperty() { 
+	// propetrty = "distance 2 hops" => suits for CDS "On greedy construction of CDS in wireless networks" by Yingshu et al
+    markAllVertexWhite(); 
     while(this.whiteVertices().size()>0) { // main cycle
       System.out.println("mis, rest "+this.whiteVertices().size()+" vertex");
-      Vertex dominator = newDominators(); 
+      Vertex dominator = newDominator(); 
       dominator.markAsDominator();
   	  for(Vertex dominatee : notExploredNeighborhoodWithoutCentralPoint(dominator).vertices) { 
 	    dominatee.markDominatee();
@@ -41,23 +41,17 @@ public class UDGwithMIS extends UDG { // maximal independent set
     	  neighborOfDominatee.setActive();
   	  }
     } 
-    
-    UDG misWithProperty=this.dominatorsVertices(); 
-	misWithProperty=tryToReplace2by1(misWithProperty); // too long
-    return misWithProperty; 
+    return this.dominatorsVertices();
   }  
 
-  private Vertex newDominators() { // elections from White Active
+  private Vertex newDominator() { // elections from White Active
 	if(this.dominatorsVertices().size()==0) // the first dominator
 	  return this.theMostConnectedPoint();  
     Vertex activeWhite=anyNotExploredActiveVertex();
     return this.notExploredActiveNeighborhoodWithCentralPoint(activeWhite).vertexHighest_dAsterix_id();
   }
 	
-  ////////////////////////////////////////////// UTILS
-
-  public UDG mis() { 
-	// hasn't property "distance 2 hops" => doesn't suit for CDS "On greedy construction of CDS in wireless networks" Yingshu Thai Wang Yi Wan Du 
+  public UDG misNaivWithoutProperty() { 
 	UDG rest = this.clone();
 	UDG mis  = new UDG();
 	while(rest.size()>0) {

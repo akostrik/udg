@@ -18,19 +18,18 @@ public class UDGwithCDS extends UDG { // connected dominating set
   }
 
   public UDG cds() { 
-	// (mis -> replace2by1) -> greedy -> repeat replace2by1 -> 132
+    // get first solution:
+	UDG cds=CDSyingshuThaiWangYiWanDu(); 
 
-	UDG cds=cdsAlgoArticle(); 
-
-    // optimisations:
+    // optimizer the first solution: 
 	// cds = this.tryToReplace2by1(cds); // long
-    //cds = repeatWhileCanDoBetter(cds,this.tryToReplace2by1); // long
-	//cds = this.tryToRemovePoints(cds); 
+    // cds = repeatWhileCanDoBetter(cds,this.tryToReplace2by1); // long
+	// cds = this.tryToRemovePoints(cds); 
 
     return cds;
   }
   
-  private UDG cdsAlgoArticle() { // "On greedy construction of CDS in wireless networks" Yingshu Thai Wang Yi Wan Du 
+  private UDG CDSyingshuThaiWangYiWanDu() { // "On greedy construction of CDS in wireless networks" Yingshu Thai Wang Yi Wan Du 
 	UDG mis = new UDGwithMIS(vertices).misWithProperty(); 
     System.out.println("mis = "+mis.toStringWithColorsDegrees());
 	this.markVertexBlack(mis);
