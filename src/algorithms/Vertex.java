@@ -134,4 +134,13 @@ public class Vertex extends Point implements Comparable<Vertex> {
     else if(this.isDominator())         toReturn += "b";
 	return toReturn+"]";
   }
+
+  public String toStringWithId() {
+    String toReturn = "["+this.x+" "+this.y+" ";
+ 	if     (this.isNotExploredActive()) toReturn += "aw";
+    else if(this.isNotExplored())       toReturn += "w";
+    else if(this.isDominatee ())        toReturn += "g";
+    else if(this.isDominator())         toReturn += "b";
+	return toReturn+" "+System.identityHashCode(this)+"]";
+  }
 }

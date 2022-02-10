@@ -26,67 +26,75 @@ public class UDGwithFVS extends UDG { // feedback vertex set
   }
   
   public UDG FVSbafnaBermanFujito() { // unweighted version, weight=1 for all vertices
-	setWeightForAllVertices(1); 
-	UDG rest = this.clone();
-	UDG fvs  = new UDG();
-    System.out.println("*******");
-    System.out.println("this = "+this.toStringWithWightDegrees() );
-    System.out.println("rest = "+rest.toStringWithWightDegrees() );
-    System.out.println("fvs  = "+fvs .toStringWithWightDegrees() );
+	UDG C=null;
 	Stack<Vertex> stack = new Stack<Vertex>();
-	UDG sjCycle;
-	this.cleanup(); rest.cleanup(); // ?
+	setWeightOfAllVertices(1); 
 
-	while(rest.vertices.size()>0) {
-      System.out.println("--1--");
-      System.out.println("this = "+this.toStringWithWightDegrees() );
-      System.out.println("rest = "+rest.toStringWithWightDegrees() );
-      System.out.println("fvs  = "+fvs.toStringWithWightDegrees() );
-      if((sjCycle=rest.anySemidisjointCycle())!=null) {
-   	    System.out.println("    sjCycle = "+sjCycle.toStringWithWightDegrees());
-    	for(Vertex p : sjCycle.vertices)
-    	  p.weight=0;
+	//UDG G = this.clone();
+	UDG V = this.clone();
+	UDG F  = new UDG();
+	//G.cleanup(); 
+	V.cleanup();
+
+    //System.out.println("V = "+V.toStringWithWightDegrees() );
+    //System.out.println("F = "+F.toStringWithWightDegrees() );
+	while(V.size()>0) {
+   	  System.out.println("V.size() = "+V.size());
+	  //System.out.println("*******");
+	  C=V.anySemidisjointCycle();
+      if(C.size()>0) {
+   	    System.out.println("C = "+C.toStringWithWightDegrees());
+        double gamma = C.minWeight();
+   	    System.out.println("gamma = "+gamma);
+    	for(Vertex p : C.vertices) {
+    	  p.weight -= gamma; ///
+    	  //if(V.contains(p)) V.vertices.get(V.vertices.indexOf(p)).weight -= gamma;
+    	}
+        //System.out.println("V = "+V.toStringWithWightDegrees() );
       }
       else {
-    	System.out.println("    no sjCycles");
-      	double gamma=0;
-    	for(Vertex p : rest.vertices)
-    	  if(gamma>1./(rest.degree(p)-1))
-    		gamma=1./(rest.degree(p)-1);
-    	for(Vertex p : rest.vertices)
-    	  p.weight = p.weight - gamma*(rest.degree(p)-1);
+    	//System.out.println("нету sjCycles");
+      	double gamma = V.minExpressionForThisAlgo();
+      	for(Vertex p : V.vertices) 
+   	      p.weight -= gamma*(V.degree(p)-1);
+        //System.out.println("V =     "+V.toStringWithWightDegrees() );
       }
-      for(int i=0; i<rest.size(); i++) {
-    	Vertex p = rest.get(i);
+   	  //System.out.println("сейчас будем переносить циклом");
+      //System.out.println("V     = "+V.toStringWithWightDegrees() );
+   	  //System.out.println("F     = "+F.toStringWithWightDegrees() );
+   	  //System.out.println("stack = "+stack.toString());
+      for(int i=0; i<V.size(); i++) {
+    	Vertex p = V.get(i);
     	if(p.weight==0) {
-       	  System.out.println("    переносим "+p.toString()+" из rest в fvs");
-    	  fvs.add(p);
-          rest.remove(p);
-          i--;
+    	  F.add(p);
+          V.remove(p);
           stack.push(p);
+          i--;
     	}
+     	System.out.println();
       }
-      System.out.println("--2--");
-      System.out.println("this = "+this.toStringWithWightDegrees() );
-      System.out.println("rest = "+rest.toStringWithWightDegrees() );
-      System.out.println("fvs  = "+fvs .toStringWithWightDegrees() );
-
-  	  this.cleanup(); rest.cleanup(); // ?
-      System.out.println("--3-- aftre cleanup");
-      System.out.println("this = "+this.toStringWithWightDegrees() );
-      System.out.println("rest = "+rest.toStringWithWightDegrees() );
-      System.out.println("fvs  = "+fvs .toStringWithWightDegrees() );
+   	  //System.out.println("циклом перенесли");
+      //System.out.println("V = "+V.toStringWithWightDegrees() );
+   	  //System.out.println("F = "+F.toStringWithWightDegrees() );
+   	  //System.out.println("stack = "+stack.toString());
+      //G.cleanup(); 
+  	  V.cleanup();
+  	  //System.out.println("сделали cleanup");
+      //System.out.println("V = "+V.toStringWithWightDegrees() );
     }
 
-    System.out.println("*** stack = "+stack.toString() );
+    //System.out.println("стэк:");
+    //System.out.println("stack = "+stack.toString() );
+    //System.out.println("F     = "+F.toStringWithWightDegrees() );
     while(stack.size()>0) {
       Vertex p = stack.pop();
-      if(this.hasAsFVS(fvs.withoutOnePoint(p)))
-    	fvs.remove(p);
+      if(this.hasAsFVS(F.withoutOnePoint(p)))
+    	F.remove(p);
     }
-    System.out.println("*** stack = "+stack.toString() );
-    System.out.println("*** return fvs = "+fvs.toString() );
+    //System.out.println("закончили стэк:");
+    //System.out.println("stack = "+stack.toString() );
+    //System.out.println("F     = "+F.toStringWithWightDegrees() );
     
-	return fvs;	  
+	return F;	  
   }
 }

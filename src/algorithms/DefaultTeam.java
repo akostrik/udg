@@ -1,6 +1,6 @@
 // l'affichage spécialsé pour chaque algo ?
-// gitignore ?
 // javadoc ?
+// classes from another projet ?
 
 package algorithms;
 import java.awt.Point;
@@ -10,15 +10,20 @@ public class DefaultTeam {
   public ArrayList<Point> calculConnectedDominatingSet(ArrayList<Point> points, int edgeThreshold) {
 	UDG.edgeThreshold = edgeThreshold;
     UDG solution=null;
-	
-	solution = new UDGwithFVS(Vertex.convertToVertex(points)).fvs();
+
+    solution = new UDGwithFVS(Vertex.convertToVertex(points)).fvs();
 	//solution = new UDGwithDS(Vertex.convertToVertex(points)).ds();
 	//solution = new UDGwithMIS(Vertex.convertToVertex(points)).misWithProperty(); 
 	//solution = new UDGwithCDS(Vertex.convertToVertex(points)).cds();
-	//solution = UDG.allPointOfSeveralUDG(new UDG(Vertex.convertToVertex(points)).DFSreturnCycles()); // all cycles
-	// (new UDG(Vertex.convertToVertex(points))).DFSprintCycles(); // print all cycles
+
+    //(new UDG(Vertex.convertToVertex(points))).printVertexDFS(); 
+    //(new UDG(Vertex.convertToVertex(points))).printCyclesDFS(); 
+    //(new UDG(Vertex.convertToVertex(points))).printSemidisjointeCyclesDFS(); 
+	//(new UDG(Vertex.convertToVertex(points))).cyclesExistDFS();
+	//solution = UDG.allPointOfSeveralUDG(new UDG(Vertex.convertToVertex(points)).returnCyclesDFS()); // all cycles
     //solution = (new UDG(Vertex.convertToVertex(points))).anySemidisjointCycle();
-	System.out.println(solution!=null ? "solution: "+solution.toString() : "null");
+
+    System.out.println(solution!=null ? "solution: "+solution.toString() : "null");
 	return solution!=null ? solution.convertToPoints() : new ArrayList<Point>();
   }
 }
