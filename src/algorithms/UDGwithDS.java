@@ -4,7 +4,8 @@ import java.util.ArrayList;
 public class UDGwithDS extends UDG { // dominating set
   public static double epsilon = 1;         // (1+epsilon) = a bound for the local DS
   public static double ro      = 1+epsilon; // compute a DS of cardinality no more than (1+epsilon) the size of min DS 
-	
+  public static int sizeMinNiebergHurink = 40;
+  
   public UDGwithDS(ArrayList<Vertex> vertex) {
     super(vertex);
     this.isSolution                   = (solutionCandidat)     -> { return hasAsDS(solutionCandidat); }; 
@@ -17,29 +18,43 @@ public class UDGwithDS extends UDG { // dominating set
   }
 
   public UDG ds() {
-    // greedy                       -> 94
-	// greedy -> remove             -> 93
-	// greedy -> repeat remove      -> 91
-	// greedy -> replace2by1        -> 81
-	// greedy -> repeat replace2by1 -> 79
+    if(!this.isConnected()) {
+      System.out.println("input UPD must be connected ");
+      return new UDG();
+    }
 
     // get first solution:
-	UDG ds = greedyAlgo(); 
-
+	// UDG ds = greedyAlgo(); 
+    UDG ds = dsNiebergHurink();
+    
     // optimize the first solution: 
-	// ds = this.tryToReplace3by2(ds); // too long
-    // ds = this.tryToReplace2by1(ds); 
-    ds = repeatWhileCanDoBetter(ds,this.tryToReplace2by1); 
-    // ds = this.tryToRemovePoints(ds); 
-    ds = repeatWhileCanDoBetter(ds,this.tryToRemovePoints); 
+    // ds = repeatWhileCanDoBetter(ds,this.tryToReplace3by2); // too long
+    // ds = repeatWhileCanDoBetter(ds,this.tryToReplace2by1); 
+    // ds = repeatWhileCanDoBetter(ds,this.tryToRemovePoints); 
 
     return ds;
   }
-  
+
   public UDG dsNiebergHurink() {
+	//if(this.size()<sizeMinNiebergHurink) 
+      //return dsLitleGraph(); 
+	System.out.println("aPathOf3hopsOrLongerExiste() = "+aPathOf3hopsOrLongerExiste());
+	if(!this.aPathOf3hopsOrLongerExiste()) 
+      return dsLitleGraph(); 
+
+    Vertex theMostConnected = this.theMostConnectedPoint();
+    
 	UDG V  = this.clone(); // rest
 	ArrayList<UDG> DNi = new ArrayList<UDG>();
 
 	return UDG.unionOf(DNi);
+  }
+  
+  public UDG dsLitleGraph() {
+	UDG ds = greedyAlgo(); 
+    ds = repeatWhileCanDoBetter(ds,this.tryToReplace3by2); 
+    ds = repeatWhileCanDoBetter(ds,this.tryToReplace2by1); 
+    ds = repeatWhileCanDoBetter(ds,this.tryToRemovePoints); 
+    return ds;	  
   }
 }

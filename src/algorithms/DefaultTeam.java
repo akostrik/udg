@@ -1,6 +1,9 @@
 // l'affichage spécialsé pour chaque algo ?
 // javadoc ?
 // classes from another projet ?
+// Stream<ArrayList<Point>> parallel
+// BitSet visited = new BitSet(rest.size());
+// public List<String> calc(final Map<String, Vertex> interfaces, final Map<String, Vertex> clients) {
 
 package algorithms;
 import java.awt.Point;
@@ -11,17 +14,11 @@ public class DefaultTeam {
 	UDG.edgeThreshold = edgeThreshold;
     UDG solution=null;
 
-    solution = new UDGwithFVS(Vertex.convertToVertex(points)).fvs();
-	//solution = new UDGwithDS(Vertex.convertToVertex(points)).ds();
+    //solution = new UDGwithFVS(Vertex.convertToVertex(points)).fvs();
+	solution = new UDGwithDS(Vertex.convertToVertex(points)).ds();
 	//solution = new UDGwithMIS(Vertex.convertToVertex(points)).misWithProperty(); 
 	//solution = new UDGwithCDS(Vertex.convertToVertex(points)).cds();
-
-    //(new UDG(Vertex.convertToVertex(points))).printVertexDFS(); 
-    //(new UDG(Vertex.convertToVertex(points))).printCyclesDFS(); 
-    //(new UDG(Vertex.convertToVertex(points))).printSemidisjointeCyclesDFS(); 
-	//(new UDG(Vertex.convertToVertex(points))).cyclesExistDFS();
-	solution = UDG.unionOf(new UDG(Vertex.convertToVertex(points)).returnCyclesDFS()); // all cycles
-    //solution = (new UDG(Vertex.convertToVertex(points))).anySemidisjointCycle();
+	//solution = UDG.unionOf(new UDG(Vertex.convertToVertex(points)).returnCyclesDFS()); // all cycles
 
     System.out.println(solution!=null ? "solution: "+solution.toString() : "null");
 	return solution!=null ? solution.convertToPoints() : new ArrayList<Point>();

@@ -13,11 +13,6 @@ public class UDGwithMIS extends UDG { // maximal independent set
   }
 
   public UDG mis() { 
-    if(!this.isConnected()) {
-       System.out.println("input UPD must be connected ");
-       return new UDG();
-    }
-
     // get first solution:
     UDG mis = misWithProperty(); // need for CDS
     // UDG mis = misNaivWithoutProperty(); // doesn't suit for CDS

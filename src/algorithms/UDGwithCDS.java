@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class UDGwithCDS extends UDG { // connected dominating set
   public Map<Vertex,UDG>               mapBlackBlueComponents       = null;
-	
+
   public UDGwithCDS(ArrayList<Vertex> vertex) {
     super(vertex);
     this.isSolution                = (solutionCandidat)     -> { return this.hasAsCDS(solutionCandidat); };
@@ -18,6 +18,11 @@ public class UDGwithCDS extends UDG { // connected dominating set
   }
 
   public UDG cds() { 
+    if(!this.isConnected()) {
+      System.out.println("input UPD must be connected ");
+      return new UDG();
+    }
+
     // get first solution:
 	UDG cds=CDSyingshuThaiWangYiWanDu(); 
 

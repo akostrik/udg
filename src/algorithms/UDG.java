@@ -297,6 +297,31 @@ public class UDG {
     lastPoint.markBlack(); 
   }
 
+  /**/ public boolean aPathOf3hopsOrLongerExiste() { 
+    markAllVertexWhite(); 
+    for(Vertex p : vertices)
+      if(p.isWhite()) 
+   	    if(aPathOf3hopsOrLongerExisteExploreDFS(new UDG(p)))
+   	      return true;
+    return false;
+  }
+
+  public boolean aPathOf3hopsOrLongerExisteExploreDFS(UDG path) { 
+    if(path.size()>=3) return true;
+	boolean aPathOf3hopsOrLongerExiste=false;
+	Vertex lastPoint = path.get(path.size()-1);
+    lastPoint.markGrey(); 
+	System.out.println(path.toString());
+	for(Vertex newPoint : this.neighborhoodWithoutCentralPoint(lastPoint).vertices) 
+      if(newPoint.isWhite()) { 
+    	path.add(newPoint);
+    	aPathOf3hopsOrLongerExiste=aPathOf3hopsOrLongerExisteExploreDFS(path);
+    	path.remove(newPoint);
+      }
+    lastPoint.markBlack(); 
+    return aPathOf3hopsOrLongerExiste;
+  }
+
   /**/ public void printCyclesDFS() { // 
     markAllVertexWhite(); 
 	// UDG cloneWihoutDupliceta = this.cloneWithoutDuplicata(); 
