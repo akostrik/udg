@@ -4,6 +4,7 @@ package algorithms;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Scanner;
 
 public class UDGwithCDS extends UDG { // connected dominating set
   public Map<Vertex,UDG>               mapBlackBlueComponents       = null;
@@ -37,6 +38,7 @@ public class UDGwithCDS extends UDG { // connected dominating set
   private UDG CDSyingshuThaiWangYiWanDu() { // "On greedy construction of CDS in wireless networks" Yingshu Thai Wang Yi Wan Du 
 	UDG mis = new UDGwithMIS(vertices).misWithProperty(); 
     System.out.println("mis = "+mis.toStringWithColorsDegrees());
+    
 	this.markVertexBlack(mis);
   	this.partExternalTo(mis).markAllVertexGrey();
   	this.mapBlackBlueComponents = blackComponents();

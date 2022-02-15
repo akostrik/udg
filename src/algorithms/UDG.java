@@ -1,11 +1,15 @@
 package algorithms; 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import utilities.Algo;
 import utilities.AlgoImproveSolution;
@@ -21,7 +25,7 @@ import java.awt.Point;
 public class UDG {
   public ArrayList<Vertex>             vertices                      = null; // initialisation in the constructor
   public static int                    edgeThreshold;                       // the only init., here ? in the calling class ?
-  private static int                   counter                      = 1;    // tmp
+  public static int                     counter                      = 1;    // tmp
   public AlgoImproveSolution           tryToRemovePoints            = null; // initialisation in the constructor
   public AlgoImproveSolution           tryToReplace2by1             = null; // initialisation in the constructor
   public AlgoImproveSolution           tryToReplace3by2             = null; // initialisation in the constructor
@@ -311,7 +315,7 @@ public class UDG {
 	boolean aPathOf3hopsOrLongerExiste=false;
 	Vertex lastPoint = path.get(path.size()-1);
     lastPoint.markGrey(); 
-	System.out.println(path.toString());
+	//System.out.println(path.toString());
 	for(Vertex newPoint : this.neighborhoodWithoutCentralPoint(lastPoint).vertices) 
       if(newPoint.isWhite()) { 
     	path.add(newPoint);
@@ -538,11 +542,13 @@ public class UDG {
 	return neighborhood; 
   }
   public UDG neighborhoodWithInitialPoints(UDG initialPoints) { // not clone 
-	HashSet<Vertex> pointsToAdd = new HashSet<Vertex>(); 
+    //System.out.println("neigh of "+initialPoints.toString()+ " in "+this.toString());
+    HashSet<Vertex> pointsToAdd = new HashSet<Vertex>(); 
 	for(Vertex p : initialPoints.vertices)
 	  pointsToAdd.addAll(this.neighborhoodWithCentralPoint(p).vertices);
-	initialPoints.addAll(new ArrayList<Vertex>(pointsToAdd));
-	return initialPoints; 
+	//initialPoints.addAll(new ArrayList<Vertex>(pointsToAdd));
+    //System.out.println("neigh of "+initialPoints.toString()+ " in "+this.toString());
+	return new UDG(pointsToAdd); 
   }
 
   public UDG blackNeighborhoodWithoutInitialPoints(UDG initialPoints) { // not clone 
@@ -908,12 +914,19 @@ public class UDG {
 	return vertices.remove(toRemove);
   }
 
-  public boolean remove(ArrayList<Vertex> toRemove) {
+  public boolean removeAll(ArrayList<Vertex> toRemove) {
 	return vertices.removeAll(toRemove);
   }
 
   public boolean removeAll(UDG g) {
-	ArrayList<Vertex> toRemove = g.clone().vertices;
+	ArrayList<Vertex> toRemove = g.clone().vertices; /// clone ?
+	return vertices.removeAll(toRemove);
+  }
+
+  public boolean removeAll(Set<UDG> udgs) {
+	ArrayList<Vertex> toRemove = new ArrayList<Vertex>();
+    for(UDG g : udgs)
+      toRemove.addAll(g.vertices);
 	return vertices.removeAll(toRemove);
   }
 
@@ -972,11 +985,13 @@ public class UDG {
 	return this.size();
   }
 
-  public static UDG unionOf(ArrayList<UDG> UDGs) { // debugging
-	UDG allPoinsOfAllCycles = new UDG();
-	for(UDG udg : UDGs) 
-	  allPoinsOfAllCycles.addAll(udg.vertices);
-	return allPoinsOfAllCycles;
+  public static UDG unionOf(ArrayList<UDG> UDGs) { /// verify
+	UDG union = new UDG();
+    UDGs.stream().map(udg->udg.vertices).forEach(union::addAll);
+    System.out.println("1 unionOf = "+union.toString());
+    //Arrays.stream(UDGs.toArray(new UDG[UDGs.size()])).map(udg->udg.vertices).collect(Collectors.toList()); 
+    //System.out.println("2 unionOf = "+union.toString());
+	return union;
   }
   
   public Vertex vertexOfMinDegree() { /// used?
