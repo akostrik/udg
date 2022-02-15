@@ -9,7 +9,6 @@ public class UDGwithDS extends UDG { // dominating set
   public static double ro      = 1+epsilon; // compute a DS of cardinality no more than (1+epsilon) the size of min DS 
   public static int sizeMinNiebergHurink = 3; ///
   public static Map<UDG,UDG> collections = new HashMap<UDG,UDG>();
-  public static int counter2=1;
   
   public UDGwithDS(ArrayList<Vertex> vertex) {
     super(vertex);
@@ -56,20 +55,14 @@ public class UDGwithDS extends UDG { // dominating set
   }
 
   public UDGwithDS dsNiebergHurink() {
-	//System.out.println((UDG.counter++)+" dsNiebergHurink");
-	//if(UDG.counter>10) return new UDGwithDS();
-	//System.out.println("!aPathOf3hopsOrLongerExiste() "+(!aPathOf3hopsOrLongerExiste())+" in "+this.toString());
 	if(this.size()<sizeMinNiebergHurink || !this.aPathOf3hopsOrLongerExiste())
       return new UDGwithDS(this.dsLitleGraph()); 
 
 	UDGwithDS V  = new UDGwithDS(this.clone()); // V=rest
     while(V.size()>0) {
-   	  System.out.println("while V "+V.toString());
+   	  System.out.println("rest = "+V.toString());
    	  V.computeNextCollection();
-  	  //System.out.println("collections "+collections.toString());
-   	  //System.out.println("from V "+V.toString()+" remove "+collections.keySet().stream().toList().toString());
    	  V.removeAll(collections.keySet());
-  	  //if(UDGwithDS.counter2++>10) break;
     }
     
     UDG ds = new UDGwithDS(UDG.unionOf(new ArrayList<UDG>(collections.values().stream().toList())));
@@ -77,28 +70,21 @@ public class UDGwithDS extends UDG { // dominating set
   }
  
   private void computeNextCollection() {
-	System.out.println("computeNextCollection this="+this.toString());
 	UDGwithDS Nr0 = new UDGwithDS(this.theMostConnectedPoint());
 	UDGwithDS DNr0 = Nr0.dsLitleGraph();
-	//System.out.println("Nr0  "+Nr0.toString()+", DNr0 = "+DNr0.toString());
     UDGwithDS Nr1  = new UDGwithDS(this.neighborhoodWithInitialPoints(Nr0));
     UDGwithDS DNr1 = Nr1.dsLitleGraph();
-	//System.out.println("Nr1  "+Nr1.toString()+", DNr1 = "+DNr1.toString());
     UDGwithDS Nr2  = new UDGwithDS(this.neighborhoodWithInitialPoints(Nr1));
     UDGwithDS DNr2 = Nr2.dsLitleGraph();
-	//System.out.println("Nr2  "+Nr2.toString()+", DNr2 = "+DNr2.toString());
 
 	while(DNr2.size()>ro*DNr0.size()) {
-      System.out.println("while "+DNr2.size()+">"+ro+"*"+DNr0.size()+" continue");
+      System.out.println(DNr2.size()+">"+ro+"*"+DNr0.size()+" continue");
 	  Nr0  = Nr1;
       DNr0 = DNr1;
-      //System.out.println("Nr0  "+Nr0.toString()+", DNr0 = "+DNr0.toString());
       Nr1  = Nr2;
       DNr1 = DNr2;
-  	  //System.out.println("Nr1  "+Nr1.toString()+", DNr1 = "+DNr1.toString());
       Nr2  = new UDGwithDS(this.neighborhoodWithInitialPoints(Nr2));
       DNr2 = Nr2.dsLitleGraph();
-  	  //System.out.println("Nr2  "+Nr2.toString()+", DNr2 = "+DNr2.toString());
     } 
 	collections.put(Nr2,DNr2);
   }
@@ -108,7 +94,6 @@ public class UDGwithDS extends UDG { // dominating set
     // ds = repeatWhileCanDoBetter(ds,this.tryToReplace3by2); // long, no utility in the example
     ds = repeatWhileCanDoBetter(ds,this.tryToReplace2by1); 
     ds = repeatWhileCanDoBetter(ds,this.tryToRemovePoints); 
-	//System.out.println("dsLitleGraph ="+ds);
     return new UDGwithDS(ds);	  
   }
 }
