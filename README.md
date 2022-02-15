@@ -19,8 +19,8 @@ Sorbonne University, Master Informatics, DAAR (Développement des Algorithmes d�
 *Minimum Dominating Set* is a minimum sized subset of vertices D⊆V such that every vertex v∈V either belong to D or is a neighbour
 of a vertex in D.
   - Greedy algo for a connected graph
+  - Algo of the article "A PTAS for the minimum domimation set problem in unit disk graphs" by Nieberg, Hurink
   - Optimisation by Local Search 
-  - Optimisation of the article "A PTAS for the minimum domimation set problem in unit disk graphs" by Nieberg, Hurink - soon
 
 ## CDS, Conected Domitating Set
 *Ninimum Connected Dominating Set* is a minimum sized subset of vertices D⊆V such that every vertex v∈V either belong to D or is a neighbour of a vertex in D, and such that the subgraph G[D] induced by D is connected.
